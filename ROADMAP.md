@@ -6,6 +6,7 @@
 - [x] Monochrome glass panels floating over a full-window map
 - [x] Keep route points visible beside the floating controls
 - [x] English quick-start guide and updated screenshots
+- [x] Windows EXE with device CLI and native WebView2 startup checks
 
 ## Version 1.3
 

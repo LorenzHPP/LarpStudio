@@ -35,7 +35,7 @@ device selections, and pairing files are kept out of the repository.
 
 ## Run on Windows
 
-For the prebuilt app, open the [verified Windows build](https://github.com/LorenzHPP/LarpStudio/actions/runs/38164734618)
+For the prebuilt app, open the [verified Windows build](https://github.com/LorenzHPP/LarpStudio/actions/runs/38165709646)
 and download **Larp-Studio-Windows** under **Artifacts** (GitHub sign-in required).
 Extract the entire ZIP and open **Larp Studio.exe**. Python is included;
 Microsoft Edge WebView2 Runtime and Apple USB drivers are still required.

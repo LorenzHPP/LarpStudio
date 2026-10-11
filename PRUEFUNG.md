@@ -1,4 +1,19 @@
-# Prüfumfang · 11.10.2026 · Larp Studio 1.3
+# Prüfumfang · 11.10.2026 · Larp Studio 1.4
+
+Version 1.4 zusätzlich geprüft:
+
+- Oberfläche, Dialoge, Status-/Fehlermeldungen und Einrichtungsfenster auf
+  Englisch umgestellt. Suchanfragen verwenden Englisch als bevorzugte Sprache.
+- Glass-Panels schweben über der gesamten Karte; Punkte und Routen werden
+  neben der Seitenleiste eingerahmt. Sichtbarkeit geladener Routenpunkte geprüft.
+- Echte OSM-Kartenansicht in Dark und Light visuell geprüft; Screenshots
+  mit öffentlichen Beispielorten in docs/location-glass.png und docs/artwork-studio.png.
+- 38 Backend-Tests sowie Bedienprüfungen für Pin, Suche, Favoriten, Punktlöschung,
+  Routenplanung, Fahrprofil, Pause/Beenden, Bibliothek und PNG-Export bestanden.
+- Fenstergrößen 1024 × 700, 1366 × 768 und 1920 × 1080 geprüft.
+- Windows-EXE mit englischer Oberfläche gebaut; verpackte Geräte-CLI und
+  natives WebView2-Fenster bestanden ihre Starttests auf GitHubs Windows-Runner.
+- Kein neues Hardware-Ergebnis: iOS 27.2 und Snapchat bleiben ungetestet.
 
 Ausgeführt in einer Linux-Umgebung ohne angeschlossenes iPhone:
 
@@ -82,7 +97,7 @@ Zusätzlich auf GitHubs Windows-Runner geprüft:
   (1536 × 969) und Geräte-/Routen-/Export-API erfolgreich geladen.
   Das interne Fensterobjekt wird nicht als JavaScript-API veröffentlicht.
 - Offline-Tests und JavaScript-Syntax auf Windows und Linux erfolgreich.
-- [Windows-Build mit Starttests](https://github.com/LorenzHPP/LarpStudio/actions/runs/38164734618).
+- [Windows-Build mit Starttests](https://github.com/LorenzHPP/LarpStudio/actions/runs/38165709646).
 
 Noch nicht geprüft:
 
