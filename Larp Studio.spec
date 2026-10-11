@@ -1,9 +1,12 @@
 # Build on Windows with the app's installed environment.
-from PyInstaller.utils.hooks import collect_all
+from PyInstaller.utils.hooks import collect_all, copy_metadata
 datas = [('ui', 'ui'), ('services.json', '.'), ('licenses', 'licenses'),
          ('LICENSE', '.'), ('THIRD-PARTY.md', '.'), ('README.md', '.'), ('README.de.md', '.'), ('START-HIER.txt', '.')]
 binaries = []
 hiddenimports = ['engine', 'transport', 'driving', 'artwork', 'route_library']
+# Several transitive device packages obtain their version at import time.
+datas += copy_metadata('pymobiledevice3', recursive=True)
+datas += copy_metadata('pywebview', recursive=True)
 for package in ['webview', 'pymobiledevice3', 'pmd_pytcp', 'pmd_net_addr', 'pytun_pmd3']:
     package_datas, package_binaries, package_imports = collect_all(package)
     datas += package_datas
