@@ -1,0 +1,180 @@
+/* Floating monochrome surfaces; opaque enough to keep map labels behind them. */
+:root {
+  --panel-width: 320px;
+  --gutter: 20px;
+  --map-left: calc(var(--panel-width) + var(--gutter) * 2 + 24px);
+  --glass: rgba(20, 20, 22, .84);
+  --glass-line: rgba(255, 255, 255, .13);
+  --line: rgba(255, 255, 255, .09);
+  --muted: #b0b0b4;
+}
+.app-header {
+  background: #111113;
+  border-bottom-color: var(--line);
+}
+.brand { gap: 11px; font-size: 21px; letter-spacing: -.8px; }
+.brand b { color: #bdbdc2; }
+.studio-nav {
+  align-self: center;
+  gap: 3px;
+  height: 36px;
+  padding: 4px;
+  margin-left: 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff06;
+}
+.studio-nav button {
+  border: 0;
+  border-radius: 7px;
+  padding: 0 15px;
+  color: #b0b0b4;
+  transition: color .15s, background .15s;
+}
+.studio-nav button[aria-pressed=true] { background: #ffffff14; color: #fff; }
+.preview-badge { border-color: var(--glass-line); border-radius: 6px; font-size: 10px; }
+.workspace { position: relative; display: block; }
+.map-workspace { position: absolute; inset: 0; }
+.sidebar {
+  position: absolute;
+  left: var(--gutter);
+  top: var(--gutter);
+  bottom: var(--gutter);
+  width: var(--panel-width);
+  border: 1px solid var(--glass-line);
+  border-radius: 18px;
+  background: var(--glass);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  box-shadow: 0 18px 50px #0005, inset 0 1px #ffffff08;
+  overflow: hidden;
+  isolation: isolate;
+}
+.sidebar-scroll { padding: 24px 22px 16px; }
+.intro { margin-bottom: 21px; }
+.intro h1 { font-size: 26px; font-weight: 500; letter-spacing: -.9px; }
+.intro p { color: #b0b0b4; }
+.section-title h2 { color: #b6b6bc; font-size: 11px; font-weight: 500; letter-spacing: .2px; }
+.device-card { padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #ffffff04; }
+.device-icon { width: 20px; }
+.device-copy strong { font-size: 12px; }
+.device-copy>span { font-size: 10px; }
+.connection-options { margin: 12px 0 22px; }
+.connection-tabs, .drive-speed-options { border-color: var(--line); border-radius: 9px; background: #0002; }
+.connection-tabs button, .drive-speed-options button { border-radius: 6px; }
+.text-button { text-decoration: none; color: #c5c5cb; }
+.text-button:hover { color: #fff; }
+.small-button { background: #ffffff08; border-color: #ffffff20; border-radius: 7px; }
+.mode-section, .destination-section, .speed-section { padding-top: 18px; margin-bottom: 22px; }
+.modes { gap: 7px; }
+.mode {
+  min-height: 44px;
+  padding: 11px 12px;
+  border-radius: 9px;
+  border-color: #ffffff14;
+  background: #ffffff04;
+  color: #cdccd2;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.mode:hover { background: #ffffff0d; border-color: #ffffff35; }
+.mode.active, .mode.active:hover { background: #f2f2f4; border-color: #f2f2f4; color: #17171a; }
+.target-card { padding: 14px; border-radius: 10px; border-color: #ffffff1c; background: #ffffff04; }
+.target-card p { color: #b0b0b4; }
+.coordinates { color: #c4c4ca; }
+.favorites-section { padding-top: 18px; }
+.sidebar-footer { padding: 15px 22px; background: #11111355; }
+.session-hint { font-size: 10px; line-height: 1.6; }
+.primary-button { min-height: 44px; border-radius: 9px; background: #f2f2f4; border-color: #f2f2f4; }
+.outline-button, .stop-button { border-radius: 9px; border-color: #ffffff28; background: #ffffff05; }
+.reset-button { padding-top: 13px; font-size: 10px; }
+.waypoint { padding: 10px 0; }
+.waypoint-number { border-color: #ffffff40; }
+.search-box, .map-style-toggle, .map-instruction, .map-status, .route-summary,
+.live-card, .map-coordinate, .activity-button, .map-tool, dialog, .search-results, .toast {
+  background: var(--glass);
+  border-color: var(--glass-line);
+  border-radius: 11px;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 8px 28px #0003, inset 0 1px #ffffff06;
+}
+.map-top { top: var(--gutter); left: var(--map-left); right: var(--gutter); }
+.search-box { width: 390px; height: 46px; }
+.search-box kbd { border-color: #ffffff20; border-radius: 4px; font-size: 9px; }
+.search-results { top: 53px; }
+.map-style-toggle { padding: 5px; }
+.map-style-toggle button { border-radius: 6px; }
+.map-instruction { top: 81px; left: var(--map-left); max-width: calc(100% - var(--map-left) - 85px); padding: 9px 12px; color: #ceced2; }
+.map-status { top: 139px; left: var(--map-left); right: 80px; }
+.map-tools { right: var(--gutter); top: 89px; gap: 7px; }
+.map-tool { width: 38px; height: 38px; border-radius: 10px; }
+.map-tool:hover { background: #252529e6; border-color: #ffffff35; }
+.map-bottom { left: var(--map-left); right: var(--gutter); bottom: 35px; }
+.map-coordinate, .activity-button { padding: 10px 12px; }
+.route-summary, .live-card { left: var(--map-left); bottom: 95px; border-radius: 14px; }
+.live-card { max-width: calc(100% - var(--map-left) - 24px); }
+.leaflet-bottom.leaflet-left { left: var(--map-left); bottom: 4px; }
+.leaflet-control-scale-line { background: #141416c9!important; border-radius: 3px; }
+.leaflet-control-attribution { background: #141416cc!important; }
+.map-pin-label { background: #161619da; border-color: #ffffff35; border-radius: 6px; backdrop-filter: blur(10px); }
+dialog { padding: 27px; border-radius: 16px; }
+dialog::backdrop { background: #0007; backdrop-filter: blur(4px); }
+.dialog-heading h2 { font-weight: 500; }
+.help-note { background: #ffffff07; border-radius: 0 8px 8px 0; }
+dialog input:not([type=range]) { background: #0003; border-color: #ffffff28; border-radius: 8px; }
+.artwork-workspace {
+  padding: var(--gutter);
+  gap: 22px;
+  background: radial-gradient(ellipse at 65% 20%, #26262c, #111113 70%);
+}
+.artwork-sidebar {
+  width: var(--panel-width);
+  padding: 24px 22px;
+  border: 1px solid var(--glass-line);
+  border-radius: 18px;
+  background: var(--glass);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  box-shadow: 0 18px 50px #0004, inset 0 1px #ffffff08;
+}
+.artwork-stage { padding: 28px 4%; background: transparent; }
+.artwork-stage-heading h2 { font-size: 30px; letter-spacing: -1px; }
+.eyebrow { font-size: 9px; letter-spacing: 1.1px; color: #b0b0b4; }
+.artwork-local-badge { border-color: #ffffff22; border-radius: 20px; padding: 7px 11px; color: #c5c5cb; }
+.artwork-preview { border-color: #ffffff30; border-radius: 22px; box-shadow: 0 30px 70px #0007, 0 0 0 8px #ffffff02; }
+.artwork-templates button { border-radius: 9px; background: #ffffff04; border-color: #ffffff18; padding: 8px; }
+.artwork-templates button[aria-pressed=true] { border-color: #ffffff8c; background: #ffffff0a; }
+.template-swatch { border-radius: 5px; }
+.studio-fields>input { background: #0002; border-color: #ffffff24; border-radius: 8px; }
+.artwork-compatibility { border-color: var(--line); }
+.artwork-sidebar-footer { border-color: var(--line); }
+.artwork-colors input { border-color: #ffffff30; border-radius: 7px; }
+@supports not (backdrop-filter: blur(1px)) {
+  .sidebar, .artwork-sidebar, .search-box, .map-style-toggle, .map-instruction,
+  .map-status, .route-summary, .live-card, .map-coordinate, .activity-button,
+  .map-tool, dialog, .search-results, .toast { background: #19191c; }
+}
+@media(prefers-reduced-transparency:reduce) {
+  :root { --glass: #19191c; }
+  .sidebar, .artwork-sidebar, .search-box, .map-style-toggle, .map-instruction,
+  .map-status, .route-summary, .live-card, .map-coordinate, .activity-button,
+  .map-tool, dialog, .search-results, .toast { backdrop-filter: none; }
+}
+@media(max-width:1200px) {
+  :root { --panel-width: 304px; --gutter: 16px; --map-left: calc(var(--panel-width) + var(--gutter) * 2 + 18px); }
+  .sidebar-scroll, .sidebar-footer, .artwork-sidebar { padding-left: 19px; padding-right: 19px; }
+  .studio-nav { margin-left: 6px; gap: 3px; }
+  .studio-nav button { padding: 0 12px; }
+  .artwork-workspace { gap: 14px; }
+  .artwork-stage { padding: 22px 3%; }
+  .artwork-stage-heading h2 { font-size: 26px; }
+  .search-box { max-width: calc(100% - 120px); }
+}
+@media(max-height:760px) {
+  .sidebar-scroll { padding-top: 20px; }
+  .intro { margin-bottom: 16px; }
+  .intro h1 { font-size: 24px; }
+  .connection-options { margin-bottom: 18px; }
+  .mode-section, .destination-section, .speed-section { margin-bottom: 19px; padding-top: 16px; }
+  .sidebar-footer { padding-top: 12px; padding-bottom: 12px; }
+}

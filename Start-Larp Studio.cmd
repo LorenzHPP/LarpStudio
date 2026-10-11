@@ -8,8 +8,8 @@ py -3 -c "import sys; raise SystemExit(sys.version_info < (3, 9))" >nul 2>&1
 if not errorlevel 1 goto python3
 python -c "import sys; raise SystemExit(sys.version_info < (3, 9))" >nul 2>&1
 if not errorlevel 1 goto python
-echo Python fehlt. Bitte normales Python 3.13 von python.org installieren.
-echo Bei der Installation Add python.exe to PATH aktivieren.
+echo Python is missing. Install standard Python 3.13 from python.org.
+echo Enable Add python.exe to PATH during installation.
 pause
 exit /b 1
 :python313

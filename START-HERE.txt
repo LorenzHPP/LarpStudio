@@ -1,0 +1,43 @@
+LARP STUDIO 1.4 · GLASS EDITION
+
+WINDOWS APP
+1. Extract the entire ZIP to a folder you can write to.
+2. Keep Larp Studio.exe and _internal together.
+3. Open Larp Studio.exe. No separate Python installation is needed.
+
+Requires Windows 10/11, Microsoft Edge WebView2 Runtime and working Apple
+USB drivers. If no iPhone is connected, the map and artwork editor still open.
+
+LOCATION
+Connect your iPhone by USB, unlock it and trust this PC. Enable Developer Mode.
+Choose Connect, search for a place or drop a pin, then choose Set location.
+Check Apple Maps first. Stop or Reset real location sends the reset command.
+If a simulated location remains, reconnect and retry; restart the iPhone if needed.
+
+ROUTES
+Choose Walking, Running or Driving. Add two or more points and choose Plan route.
+Remove individual points using their X button or map popup.
+Driving uses road-aware speed with acceleration, braking and corner handling.
+This is an estimate from route data, without live traffic or verified speed limits.
+Save route stores points and movement mode in your local Route library.
+
+CARD ARTWORK
+Choose Card artwork, select a template and customise text, colours or an image.
+Drag an imported image to crop it. Export PNG saves a 1536 x 969 image.
+This exports artwork; it does not change an Apple Pay card or create a Wallet pass.
+
+WI-FI
+Prepare once over USB, then verify the Wi-Fi connection before unplugging.
+Your PC and iPhone must stay on the same reachable network.
+Keep the PC and Larp Studio running. A session cannot continue independently
+when the phone leaves the network.
+
+UPDATING
+Stop any running session and close the old app. Extract this version separately.
+To keep your saved places and routes, copy .atlas-data.json and .larp-routes.json
+from the previous program folder to the folder containing Larp Studio.exe.
+
+Device operation, Wi-Fi stability and resetting on your iOS 27.2 still need
+testing on your own iPhone. Windows startup checks do not replace that test.
+
+Source, guides and updates: https://github.com/LorenzHPP/LarpStudio

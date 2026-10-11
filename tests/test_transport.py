@@ -61,11 +61,11 @@ class WifiTransportTests(unittest.TestCase):
         self.assertIn("extra-closed", calls)
 
     def test_missing_wifi_never_falls_back_to_usb(self):
-        with self.assertRaisesRegex(RuntimeError, "WLAN nicht gefunden"):
+        with self.assertRaisesRegex(RuntimeError, "not found on Wi-Fi"):
             self.exercise(services=False)
 
     def test_wrong_rsd_identifier_is_rejected(self):
-        with self.assertRaisesRegex(RuntimeError, "Gerätekennung"):
+        with self.assertRaisesRegex(RuntimeError, "device identifier"):
             self.exercise(wrong_device=True)
 
 

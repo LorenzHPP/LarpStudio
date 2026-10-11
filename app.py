@@ -50,9 +50,9 @@ class Bridge:
             import webview
             image = decode_artwork(data_url)
             if self._window is None:
-                raise RuntimeError("Das Programmfenster ist noch nicht bereit.")
+                raise RuntimeError("The app window is not ready yet.")
             paths = self._window.create_file_dialog(webview.FileDialog.SAVE,
-                save_filename="Larp-Studio-Kartenbild.png", file_types=("PNG-Bild (*.png)",))
+                save_filename="Larp-Studio-Artwork.png", file_types=("PNG image (*.png)",))
             if not paths:
                 return {"saved": False}
             path = Path(paths[0] if not isinstance(paths, str) else paths)
@@ -110,7 +110,7 @@ def browser_preview(port=8765):
             try:
                 size = int(self.headers.get("Content-Length", "0"))
                 if not 0 < size <= 1024 * 1024:
-                    raise ValueError("Ungültige Anfrage.")
+                    raise ValueError("Invalid request.")
                 data = json.loads(self.rfile.read(size))
                 if self.path == "/api/search_places":
                     result = reply(lambda: maps.search(data[0]))
@@ -119,7 +119,7 @@ def browser_preview(port=8765):
                 elif self.path == "/api/get_settings":
                     result = {"ok": True, "data": {"tiles": maps.settings["tiles"]}}
                 else:
-                    result = {"ok": False, "error": "Diese Vorschau verändert keinen iPhone-Standort."}
+                    result = {"ok": False, "error": "This preview does not change your iPhone location."}
             except Exception as exc:
                 result = {"ok": False, "error": str(exc)}
             body = json.dumps(result, ensure_ascii=False).encode("utf-8")
@@ -129,7 +129,7 @@ def browser_preview(port=8765):
             self.end_headers()
             self.wfile.write(body)
     server = ThreadingHTTPServer(("127.0.0.1", port), partial(Handler, directory=str(ROOT / "ui")))
-    print(f"Larp Studio · Karten-Vorschau: http://127.0.0.1:{port} · kein iPhone verbunden", flush=True)
+    print(f"Larp Studio · map preview: http://127.0.0.1:{port} · no iPhone connected", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
@@ -143,7 +143,7 @@ def main():
         browser_preview(int(sys.argv[-1]) if sys.argv[-1].isdigit() else 8765)
         return 0
     if sys.platform != "win32":
-        print("Der Desktop-Starter ist für Windows. Karten-Vorschau: python app.py --preview")
+        print("The desktop launcher is for Windows. Map preview: python app.py --preview")
         return 1
     smoke_output = Path(sys.argv[sys.argv.index("--smoke-ui") + 1]) if "--smoke-ui" in sys.argv else None
     import asyncio
@@ -162,7 +162,7 @@ def main():
     def closing():
         if controller.shutdown(timeout=15):
             return True
-        return window.create_confirmation_dialog("Standort noch prüfen", "Das Zurücksetzen ist noch nicht bestätigt. Prüfe Apple Karten und starte das iPhone bei Bedarf neu. App trotzdem schließen?")
+        return window.create_confirmation_dialog("Check your location", "Reset has not been confirmed. Check Apple Maps and restart your iPhone if needed. Close the app anyway?")
     window.events.closing += closing
     smoke_result = {"ok": False, "error": "Window did not start"}
     def check_ui():
@@ -186,7 +186,7 @@ def main():
         finally:
             smoke_output.write_text(json.dumps(smoke_result), encoding="utf-8")
             window.destroy()
-    webview.start(check_ui if smoke_output else None, gui="edgechromium", http_server=True, user_agent="LarpStudio/1.3 (Windows desktop map)", private_mode=False,
+    webview.start(check_ui if smoke_output else None, gui="edgechromium", http_server=True, user_agent="LarpStudio/1.4 (Windows desktop map)", private_mode=False,
                   icon=str(ROOT / "ui" / "assets" / "larp-studio.ico"))
     return (0 if smoke_result["ok"] else 1) if smoke_output else 0
 

@@ -1,5 +1,12 @@
 # Larp Studio
 
+## Version 1.4 · Glass Edition
+
+- [x] English interface, dialogs, status messages, errors and setup window
+- [x] Monochrome glass panels floating over a full-window map
+- [x] Keep route points visible beside the floating controls
+- [x] English quick-start guide and updated screenshots
+
 ## Version 1.3
 
 - [x] Desktop-App und Startfenster in Larp Studio umbenennen

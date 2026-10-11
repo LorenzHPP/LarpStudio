@@ -2,7 +2,7 @@
 setlocal
 cd /d "%~dp0"
 if not exist ".venv\Scripts\python.exe" (
-  echo Bitte zuerst Start-Larp Studio.cmd ausfuehren.
+  echo Run Start-Larp Studio.cmd first.
   pause
   exit /b 1
 )
@@ -10,11 +10,11 @@ if not exist ".venv\Scripts\python.exe" (
 if errorlevel 1 goto failed
 ".venv\Scripts\python.exe" -m PyInstaller --noconfirm --clean "Larp Studio.spec"
 if errorlevel 1 goto failed
-echo Fertig: dist\Larp Studio\Larp Studio.exe
-echo Den gesamten Ordner dist\Larp Studio zusammen behalten.
+echo Done: dist\Larp Studio\Larp Studio.exe
+echo Keep all files in dist\Larp Studio together.
 pause
 exit /b 0
 :failed
-echo Der EXE-Build ist fehlgeschlagen. Siehe Meldung oben.
+echo The EXE build failed. See the message above.
 pause
 exit /b 1

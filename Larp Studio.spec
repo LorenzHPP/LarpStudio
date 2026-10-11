@@ -1,7 +1,7 @@
 # Build on Windows with the app's installed environment.
 from PyInstaller.utils.hooks import collect_all, copy_metadata
 datas = [('ui', 'ui'), ('services.json', '.'), ('licenses', 'licenses'),
-         ('LICENSE', '.'), ('THIRD-PARTY.md', '.'), ('README.md', '.'), ('README.de.md', '.'), ('START-HIER.txt', '.')]
+         ('LICENSE', '.'), ('THIRD-PARTY.md', '.'), ('README.md', '.'), ('README.de.md', '.'), ('START-HERE.txt', '.'), ('START-HIER.txt', '.')]
 binaries = []
 hiddenimports = ['engine', 'transport', 'driving', 'artwork', 'route_library']
 # Several transitive device packages obtain their version at import time.

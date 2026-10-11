@@ -18,18 +18,18 @@ async def open_tunnel(udid, connection="usb"):
     if connection == "usb":
         async with handle as rsd:
             if rsd.udid != udid:
-                raise RuntimeError("Die Gerätekennung der Sitzung stimmt nicht überein.")
+                raise RuntimeError("The session device identifier does not match.")
             yield rsd
         return
     if connection != "wifi":
-        raise ValueError("Unbekannte Verbindungsart.")
+        raise ValueError("Unknown connection type.")
 
     async def provider(serial, autopair, remotepairing_fallback):
         if serial != udid or autopair:
-            raise RuntimeError("Ungültige WLAN-Geräteauswahl.")
+            raise RuntimeError("Invalid Wi-Fi device selection.")
         services = await get_remote_pairing_tunnel_services(udid=udid, bonjour_timeout=5)
         if not services:
-            raise RuntimeError("iPhone im WLAN nicht gefunden. Gleiches WLAN nutzen, iPhone entsperren und WLAN zunächst per USB vorbereiten. Kein Gastnetz verwenden.")
+            raise RuntimeError("iPhone not found on Wi-Fi. Use the same network, unlock the iPhone and prepare Wi-Fi over USB first. Avoid guest networks.")
         selected = services[0]
         try:
             for extra in services[1:]:
@@ -45,11 +45,11 @@ async def open_tunnel(udid, connection="usb"):
         try:
             rsd = await asyncio.wait_for(handle.aopen(), timeout=30)
         except asyncio.TimeoutError as exc:
-            raise RuntimeError("Die WLAN-Verbindung hat nicht geantwortet. Gleiches WLAN und Windows-Firewall für private Netzwerke prüfen.") from exc
+            raise RuntimeError("The Wi-Fi connection timed out. Check the shared network and Windows Firewall settings for private networks.") from exc
         finally:
             userspace._create_no_root_tunnel_provider = original
         if rsd.udid != udid:
-            raise RuntimeError("Die WLAN-Gerätekennung stimmt nicht mit deinem iPhone überein.")
+            raise RuntimeError("The Wi-Fi device identifier does not match your iPhone.")
         yield rsd
     finally:
         await handle.aclose()

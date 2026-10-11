@@ -3,8 +3,13 @@
 [![Tests](https://github.com/LorenzHPP/LarpStudio/actions/workflows/ci.yml/badge.svg)](https://github.com/LorenzHPP/LarpStudio/actions/workflows/ci.yml)
 
 A Windows toolkit for location simulation, smart routes, and custom card
-artwork. Built with a clean monochrome interface, with more LARP features
+artwork. Built with a monochrome glass interface, with more LARP features
 on the way.
+
+Version 1.4 adds a fully English interface, floating translucent panels,
+and map framing that keeps pins and routes clear of the controls.
+
+![Larp Studio location workspace](docs/location-glass.png)
 
 ![Larp Studio card artwork editor](docs/artwork-studio.png)
 
@@ -43,9 +48,10 @@ To run from source:
 3. Double-click **Start-Larp Studio.cmd**. The first launch installs pinned
    dependencies in a local `.venv` and opens the desktop window.
 4. For device control, connect and unlock your iPhone, trust your PC, enable
-   Developer Mode, and select **Verbinden** in the app.
+   Developer Mode, and select **Connect** in the app.
 
-The interface is currently in German. A card artwork PNG is an image export;
+The interface, dialogs, status messages and startup screen are in English.
+See [START-HERE.txt](START-HERE.txt) for the quick guide. A card artwork PNG is an image export;
 it does not change an Apple Pay card or create a signed Wallet pass. See the
 [Wallet notes](README.de.md#was-der-wallet-bereich-kann) for compatibility.
 

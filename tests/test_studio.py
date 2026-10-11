@@ -48,7 +48,7 @@ class StudioTests(unittest.TestCase):
                 bridge._window.create_file_dialog = lambda *a, **k: [str(path)]
                 self.assertEqual(bridge.save_artwork(url), {'ok': True, 'data': {'saved': True}})
                 self.assertEqual(path.read_bytes(), raw)
-        self.assertEqual(dialogs[0]['save_filename'], 'Larp-Studio-Kartenbild.png')
+        self.assertEqual(dialogs[0]['save_filename'], 'Larp-Studio-Artwork.png')
 
     def test_invalid_export_does_not_open_dialog(self):
         from types import SimpleNamespace

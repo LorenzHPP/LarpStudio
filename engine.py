@@ -24,10 +24,10 @@ ACTIVE = {"preparing", "running", "paused", "holding", "stopping"}
 
 def coordinate(point):
     if not isinstance(point, (list, tuple)) or len(point) != 2:
-        raise ValueError("Ein Punkt braucht Breitengrad und Längengrad.")
+        raise ValueError("A point needs a latitude and longitude.")
     lat, lon = (float(n) for n in point)
     if not math.isfinite(lat) or not -90 <= lat <= 90 or not math.isfinite(lon) or not -180 <= lon <= 180:
-        raise ValueError("Die Koordinaten sind ungültig.")
+        raise ValueError("The coordinates are invalid.")
     return [lat, lon]
 
 
@@ -42,7 +42,7 @@ def distance(a, b):
 class Route:
     def __init__(self, points):
         if not isinstance(points, list) or not 1 <= len(points) <= 50000:
-            raise ValueError("Bitte zwischen 1 und 50.000 Routenpunkte verwenden.")
+            raise ValueError("Use between 1 and 50,000 route points.")
         self.points = [coordinate(p) for p in points]
         self.lengths = [0.0]
         for a, b in zip(self.points, self.points[1:]):
@@ -87,7 +87,7 @@ class DeviceClient:
                     if cancel is not None and cancel.is_set():
                         raise RuntimeError("Vorbereitung abgebrochen.")
                     if timeout is not None and time.monotonic() - began > timeout:
-                        raise RuntimeError("Die Geräteverbindung hat zu lange nicht geantwortet.")
+                        raise RuntimeError("The device connection timed out.")
                     try:
                         stdout, stderr = process.communicate(timeout=.25)
                         break
@@ -102,46 +102,46 @@ class DeviceClient:
                     process.communicate()
                 raise
             if not output.is_file():
-                raise RuntimeError("Die Geräteverbindung ist fehlgeschlagen. " + stderr[-1000:])
+                raise RuntimeError("The device connection failed. " + stderr[-1000:])
             reply = json.loads(output.read_text(encoding="utf-8"))
         if reply["code"]:
             detail = (reply["stderr"] or reply["stdout"]).strip()
             if "usbmuxd socket" in detail:
-                raise RuntimeError("Apple-Verbindungsdienst nicht erreichbar. iTunes/Apple-Geräte und den Apple Mobile Device Service prüfen.")
-            raise RuntimeError(detail[-1400:] or "Der Gerätebefehl ist fehlgeschlagen.")
+                raise RuntimeError("Apple connection service unavailable. Check iTunes/Apple Devices and the Apple Mobile Device Service.")
+            raise RuntimeError(detail[-1400:] or "The device command failed.")
         if capture:
             try:
                 return json.loads(reply["stdout"])
             except json.JSONDecodeError as exc:
-                raise RuntimeError("Das iPhone hat eine unerwartete Antwort geliefert.") from exc
+                raise RuntimeError("The iPhone returned an unexpected response.") from exc
 
     def usb(self, udid=None):
         ids = self.call(["usbmux", "list", "--usb", "--simple"], capture=True)
         if not isinstance(ids, list) or not all(isinstance(x, str) for x in ids):
-            raise RuntimeError("Ungültige USB-Geräteliste.")
+            raise RuntimeError("Invalid USB device list.")
         if udid is not None and udid not in ids:
-            raise RuntimeError("Dein ausgewähltes iPhone ist nicht per USB verbunden.")
+            raise RuntimeError("Your selected iPhone is not connected by USB.")
         return ids
 
     def inspect(self):
         ids = self.usb()
         if len(ids) != 1:
-            raise RuntimeError("Genau ein iPhone per USB anschließen, entsperren und diesem PC vertrauen.")
+            raise RuntimeError("Connect exactly one iPhone by USB, unlock it and trust this PC.")
         udid = ids[0]
         info = self.call(["lockdown", "info", "--udid", udid], capture=True)
         if not isinstance(info, dict) or info.get("DeviceClass") != "iPhone" or info.get("UniqueDeviceID") != udid:
-            raise RuntimeError("Die Gerätekennung stimmt nicht mit dem angeschlossenen iPhone überein.")
+            raise RuntimeError("The device identifier does not match the connected iPhone.")
         version = str(info.get("ProductVersion", ""))
         parts = tuple(int(p) for p in version.split(".")[:2])
         if parts < (17, 4):
-            raise RuntimeError("Diese App verwendet die USB-Entwicklerschnittstelle für iOS 17.4 oder neuer.")
+            raise RuntimeError("This app uses the USB developer interface for iOS 17.4 or later.")
         self.usb(udid)
         if self.call(["mounter", "query-developer-mode-status", "--udid", udid], capture=True) is not True:
             try:
                 self.call(["amfi", "reveal-developer-mode", "--udid", udid])
             except RuntimeError:
                 pass
-            raise RuntimeError("Am iPhone: Einstellungen → Datenschutz & Sicherheit → Entwicklermodus aktivieren. Neustart bestätigen und anschließend erneut verbinden.")
+            raise RuntimeError("On your iPhone: Settings → Privacy & Security → enable Developer Mode. Confirm the restart, then connect again.")
         return {"udid": udid, "name": info.get("DeviceName") or "Mein iPhone", "model": info.get("ProductType"), "ios": version}
 
     def mount(self, udid, cancel=None):
@@ -187,10 +187,10 @@ class Maps:
                 with urllib.request.urlopen(request, timeout=25) as response:
                     data = response.read(8 * 1024 * 1024 + 1)
                 if len(data) > 8 * 1024 * 1024:
-                    raise ValueError("Diese Route ist zu groß. Bitte eine kürzere Strecke auswählen.")
+                    raise ValueError("This route is too large. Choose a shorter route.")
                 reply = json.loads(data)
             except (OSError, json.JSONDecodeError) as exc:
-                raise RuntimeError("Kartendienst momentan nicht erreichbar. Internet prüfen oder später erneut versuchen.") from exc
+                raise RuntimeError("Map service unavailable. Check your internet connection or try again later.") from exc
             if len(self._cache) >= 50:
                 self._cache.pop(next(iter(self._cache)))
             self._cache[url] = reply
@@ -199,9 +199,9 @@ class Maps:
     def search(self, query):
         query = str(query).strip()
         if not 3 <= len(query) <= 160:
-            raise ValueError("Bitte einen Ortsnamen mit mindestens drei Zeichen eingeben.")
+            raise ValueError("Enter a place name with at least three characters.")
         # Manual searches only: no search-as-you-type, polling or bulk queries.
-        data = self.request(self.settings["geocoder"] + "?" + urllib.parse.urlencode({"q": query, "limit": 6, "lang": "de"}))
+        data = self.request(self.settings["geocoder"] + "?" + urllib.parse.urlencode({"q": query, "limit": 6, "lang": "en"}))
         results = []
         for item in data.get("features", [])[:6]:
             lon, lat = item["geometry"]["coordinates"]
@@ -213,9 +213,9 @@ class Maps:
 
     def route(self, points, mode):
         if mode not in ("walk", "run", "drive"):
-            raise ValueError("Bitte Gehen, Joggen oder Fahren auswählen.")
+            raise ValueError("Choose walking, running or driving.")
         if not isinstance(points, list) or not 2 <= len(points) <= 12:
-            raise ValueError("Setze zwischen zwei und zwölf Routenpunkte.")
+            raise ValueError("Choose between two and twelve route points.")
         points = [coordinate(p) for p in points]
         path = ";".join(f"{lon:.7f},{lat:.7f}" for lat, lon in points)
         options = "?overview=full&geometries=geojson&steps=false"
@@ -224,7 +224,7 @@ class Maps:
         url = self.settings["driving" if mode == "drive" else "walking"] + path + options
         reply = self.request(url)
         if reply.get("code") != "Ok" or not reply.get("routes"):
-            raise RuntimeError("Für diese Punkte wurde keine passende Route gefunden. Punkte näher an Wege oder Straßen setzen.")
+            raise RuntimeError("No suitable route was found. Move your points closer to paths or roads.")
         result = reply["routes"][0]
         points = [[lat, lon] for lon, lat in result["geometry"]["coordinates"]]
         route = Route(points)
@@ -233,10 +233,10 @@ class Maps:
             try:
                 profile = build_driving_profile(route, result.get("legs", []))
                 data.update(driving_profile=profile.export(), duration=profile.duration,
-                            driving_note="Straßentempo · Kurven, Beschleunigen und Bremsen berücksichtigt.")
+                            driving_note="Road-aware speed · includes corners, acceleration and braking.")
             except (ValueError, TypeError, KeyError, OverflowError) as exc:
                 data.update(driving_profile=None, duration=None,
-                            driving_note=str(exc) + " Route neu planen oder bewusst festes Tempo wählen.")
+                            driving_note=str(exc) + " Plan the route again or choose fixed speed.")
         return data
 
 
@@ -257,13 +257,13 @@ class Controller:
         self._paused = False
         self._speed = 4.8
         self._logs = deque(maxlen=50)
-        self.state = {"phase": "disconnected", "message": "Verbinde dein iPhone per USB.", "device": None,
+        self.state = {"phase": "disconnected", "message": "Connect your iPhone by USB.", "device": None,
                       "position": None, "progress": 0, "distance": 0, "traveled": 0,
                       "elapsed": 0, "last_sent": None, "sent_count": 0, "mode": "pin", "speed": 4.8,
                       "connection": "usb", "wifi_prepared": False,
                       "speed_mode": "fixed", "current_speed": 0, "duration": 0, "remaining": 0}
         self.data_file = self.root / ".atlas-data.json"
-        self.favorites = [{"name": "Brandenburger Tor", "detail": "Pariser Platz · Berlin", "point": DEFAULT_POINT}]
+        self.favorites = [{"name": "Brandenburg Gate", "detail": "Pariser Platz · Berlin", "point": DEFAULT_POINT}]
         if self.data_file.is_file():
             try:
                 data = json.loads(self.data_file.read_text(encoding="utf-8"))
@@ -288,7 +288,7 @@ class Controller:
     def _begin_job(self, phase, message, target):
         with self.lock:
             if self._busy or self.state["phase"] in ACTIVE:
-                raise RuntimeError("Bitte zuerst die laufende Sitzung beenden.")
+                raise RuntimeError("Stop your current session first.")
             self._busy = True
             self.state.update(phase=phase, message=message)
         def run():
@@ -312,35 +312,35 @@ class Controller:
                     info = (self._device if self._needs_clear else self._wifi_device)
                     info = info.copy() if info else None
                 if not info:
-                    raise RuntimeError("WLAN zuerst mit angeschlossenem USB-Kabel vorbereiten.")
+                    raise RuntimeError("Prepare Wi-Fi with the USB cable connected first.")
                 self.device.check_wifi(info["udid"])
             else:
                 info = self.device.inspect()
             with self.lock:
                 if self._needs_clear and self._device and info["udid"] != self._device["udid"]:
-                    raise RuntimeError("Zum Zurücksetzen bitte das zuvor verwendete iPhone verbinden.")
+                    raise RuntimeError("Connect the previously used iPhone to reset its location.")
                 self._device = info
                 self._connected = True
                 visible = {k: v for k, v in info.items() if k != "udid"}
-                message = "WLAN-Verbindung geprüft. Kabel kann abgezogen werden; PC und iPhone im selben WLAN lassen." if self._connection == "wifi" else "iPhone bereit. Wähle einen Punkt oder eine Route."
+                message = "Wi-Fi connection verified. You can unplug USB; keep the PC and iPhone on the same network." if self._connection == "wifi" else "iPhone ready. Choose a point or a route."
                 self.state.update(device=visible, phase="ready", message=message)
-            self.log(f"{info['name']} über {'WLAN' if self._connection == 'wifi' else 'USB'} verbunden · iOS {info['ios']}")
-        self._begin_job("connecting", "iPhone-Verbindung wird geprüft. Bitte entsperren.", inspect)
+            self.log(f"{info['name']} via {'Wi-Fi' if self._connection == 'wifi' else 'USB'} connected · iOS {info['ios']}")
+        self._begin_job("connecting", "Checking the iPhone connection. Please unlock it.", inspect)
 
     def connection(self, value):
         if value not in {"usb", "wifi"}:
-            raise ValueError("Bitte USB oder WLAN auswählen.")
+            raise ValueError("Choose USB or Wi-Fi.")
         with self.lock:
             if self._busy or self.state["phase"] in ACTIVE:
-                raise RuntimeError("Bitte zuerst die Sitzung beenden.")
+                raise RuntimeError("Stop the session first.")
             self._connection = value
             self._connected = False
-            self.state.update(connection=value, phase="disconnected", message="WLAN auswählen, dann Verbinden prüfen." if value == "wifi" else "iPhone per USB verbinden und Verbinden wählen.")
+            self.state.update(connection=value, phase="disconnected", message="Select Wi-Fi, then choose Connect to check it." if value == "wifi" else "Connect your iPhone by USB and choose Connect.")
 
     def prepare_wifi(self):
         with self.lock:
             if self._needs_clear:
-                raise RuntimeError("Bitte zuerst das Zurücksetzen abschließen.")
+                raise RuntimeError("Finish resetting the location first.")
         def prepare():
             self.stop_event.clear()
             info = self.device.inspect()
@@ -351,43 +351,43 @@ class Controller:
                 self._connected = False
                 self._connection = "wifi"
                 self.state.update(wifi_prepared=True, connection="wifi", device={k: v for k, v in info.items() if k != "udid"},
-                                  phase="disconnected", message="WLAN vorbereitet. Jetzt Verbinden klicken. Erst nach erfolgreicher WLAN-Prüfung das Kabel abziehen.")
+                                  phase="disconnected", message="Wi-Fi prepared. Choose Connect now. Unplug USB only after the Wi-Fi check succeeds.")
                 self._save_data()
-            self.log("WLAN über das vertraute USB-iPhone vorbereitet. WLAN-Verbindung noch prüfen.")
-        self._begin_job("connecting", "WLAN wird per USB vorbereitet. Kabel noch angeschlossen lassen …", prepare)
+            self.log("Wi-Fi prepared using your trusted USB iPhone. Check the Wi-Fi connection next.")
+        self._begin_job("connecting", "Preparing Wi-Fi over USB. Keep the cable connected …", prepare)
 
     def start(self, plan):
         if not isinstance(plan, dict) or plan.get("mode") not in MODES:
-            raise ValueError("Bitte einen Bewegungsmodus auswählen.")
+            raise ValueError("Choose a movement mode.")
         route = Route(plan.get("points"))
         mode = plan["mode"]
         if mode == "pin" and len(route.points) != 1:
-            raise ValueError("Für einen festen Standort bitte genau einen Punkt verwenden.")
+            raise ValueError("Use exactly one point for a fixed location.")
         if mode != "pin" and (len(route.points) < 2 or route.total < 1):
-            raise ValueError("Die Route braucht mindestens zwei unterschiedliche Punkte.")
+            raise ValueError("The route needs at least two different points.")
         speed = float(plan.get("speed", 4.8))
         if not math.isfinite(speed) or not .5 <= speed <= 160:
-            raise ValueError("Die Geschwindigkeit muss zwischen 0,5 und 160 km/h liegen.")
+            raise ValueError("Speed must be between 0.5 and 160 km/h.")
         speed_mode = plan.get("speed_mode", "fixed")
         if speed_mode not in {"auto", "fixed"} or (speed_mode == "auto" and mode != "drive"):
-            raise ValueError("Straßentempo ist nur für Fahrten verfügbar.")
+            raise ValueError("Road-aware speed is only available for driving.")
         route.driving_profile = DrivingProfile(route, plan.get("driving_profile")) if speed_mode == "auto" else None
         estimated = route.driving_profile.duration if route.driving_profile else route.total / (speed / 3.6)
         loop = plan.get("loop") is True
         with self.lock:
             if not self._device or not self._connected:
-                raise RuntimeError("Bitte zuerst dein iPhone verbinden.")
+                raise RuntimeError("Connect your iPhone first.")
             if self._needs_clear:
-                raise RuntimeError("Bitte zuerst das Zurücksetzen abschließen.")
+                raise RuntimeError("Finish resetting the location first.")
             if self._busy or self.state["phase"] in ACTIVE:
-                raise RuntimeError("Es läuft bereits eine Sitzung.")
+                raise RuntimeError("A session is already running.")
             self._busy = True
             self.stop_event.clear()
             self._paused = False
             self._sent_attempted = False
             self._speed = speed
             udid = self._device["udid"]
-            self.state.update(phase="preparing", message="Die Entwicklerschnittstelle wird vorbereitet. Das erste Mal kann einige Minuten dauern.",
+            self.state.update(phase="preparing", message="Preparing the developer interface. First-time setup may take a few minutes.",
                               mode=mode, progress=0, position=None, traveled=0, distance=route.total,
                               elapsed=0, last_sent=None, sent_count=0, speed_mode=speed_mode,
                               current_speed=0, duration=estimated, remaining=estimated)
@@ -413,7 +413,7 @@ class Controller:
                 needs_clear = self._needs_clear
             if needs_clear:
                 try:
-                    self.log("Zurücksetzen über eine neue Verbindung …")
+                    self.log("Retrying reset over a new connection …")
                     if self._connection == "wifi":
                         self.device.clear_wifi(udid)
                     else:
@@ -421,18 +421,18 @@ class Controller:
                     with self.lock:
                         self._needs_clear = False
                 except Exception as exc:
-                    self.log("Zurücksetzen nicht bestätigt: " + str(exc), "error")
+                    self.log("Reset not confirmed: " + str(exc), "error")
             with self.lock:
                 self._busy = False
                 self.state["current_speed"] = 0
                 if self._needs_clear:
-                    self.state.update(phase="error", message="Zurücksetzen nicht bestätigt. iPhone verbinden und Zurücksetzen erneut wählen; falls nötig iPhone neu starten.")
+                    self.state.update(phase="error", message="Reset not confirmed. Connect your iPhone and try Reset again; restart the iPhone if needed.")
                 elif failure:
                     self._connected = False
-                    message = "Sitzung unterbrochen: " + failure + " Löschbefehl wurde gesendet; echten Ort in Apple Karten prüfen." if self._sent_attempted else "Verbindung fehlgeschlagen: " + failure
+                    message = "Session interrupted: " + failure + " Reset command sent; check your real location in Apple Maps." if self._sent_attempted else "Connection failed: " + failure
                     self.state.update(phase="error", message=message)
                 else:
-                    self.state.update(phase="ready", message="Sitzung beendet. Prüfe deinen echten Standort in Apple Karten.")
+                    self.state.update(phase="ready", message="Session stopped. Check your real location in Apple Maps.")
             if sys.platform == "win32":
                 import ctypes
                 ctypes.windll.kernel32.SetThreadExecutionState(0x80000000)
@@ -443,7 +443,7 @@ class Controller:
         from pymobiledevice3.services.dvt.instruments.location_simulation import LocationSimulation
         async with open_tunnel(udid, self._connection) as rsd:
             if rsd.udid != udid:
-                raise RuntimeError("Die Gerätekennung der Sitzung stimmt nicht überein.")
+                raise RuntimeError("The session device identifier does not match.")
             async with DvtProvider(rsd) as dvt, LocationSimulation(dvt) as location:
                 began = last = time.monotonic()
                 traveled = drive_elapsed = 0.0
@@ -478,14 +478,14 @@ class Controller:
                         await asyncio.wait_for(location.set(*point), timeout=15)
                         with self.lock:
                             phase = "paused" if paused else "holding" if mode == "pin" or (not loop and progress >= route.total) else "running"
-                            message = "Pause · der aktuelle Punkt wird gehalten." if paused else "Zielpunkt halten" if phase == "holding" else "Route wird abgespielt"
+                            message = "Paused · holding your current position." if paused else "Holding destination" if phase == "holding" else "Following route"
                             self.state.update(phase=phase, message=message, position=point,
                                               progress=progress / route.total if route.total else 0,
                                               traveled=traveled, elapsed=now - began, last_sent=time.time(),
                                               current_speed=velocity * 3.6, remaining=remaining)
                             self.state["sent_count"] += 1
                         if self.state["sent_count"] == 1:
-                            self.log("Erster Standortbefehl gesendet. Position in Apple Karten prüfen.")
+                            self.log("First location command sent. Check the position in Apple Maps.")
                         # Never wait synchronously on UI input. The tunnel stays scheduled.
                         for _ in range(10):
                             if self.stop_event.is_set():
@@ -493,19 +493,19 @@ class Controller:
                             await asyncio.sleep(.1)
                 finally:
                     with self.lock:
-                        self.state.update(phase="stopping", message="Die Simulation wird beendet …")
+                        self.state.update(phase="stopping", message="Stopping the simulation …")
                     try:
                         await asyncio.wait_for(location.clear(), timeout=10)
                         with self.lock:
                             self._needs_clear = False
-                        self.log("Löschbefehl in der laufenden Sitzung gesendet. Echten Ort in Apple Karten prüfen.")
+                        self.log("Reset command sent in the current session. Check your real location in Apple Maps.")
                     except Exception as exc:
-                        self.log("Löschen in der Sitzung fehlgeschlagen: " + str(exc), "error")
+                        self.log("Reset in the session failed: " + str(exc), "error")
 
     def pause(self):
         with self.lock:
             if self.state["phase"] not in {"running", "paused", "holding"}:
-                raise RuntimeError("Es läuft keine Sitzung zum Pausieren.")
+                raise RuntimeError("There is no active session to pause.")
             self._paused = not self._paused
             self.state["phase"] = "paused" if self._paused else "running"
             if self._paused:
@@ -515,23 +515,23 @@ class Controller:
     def speed(self, value):
         value = float(value)
         if not math.isfinite(value) or not .5 <= value <= 160:
-            raise ValueError("Ungültige Geschwindigkeit.")
+            raise ValueError("Invalid speed.")
         with self.lock:
             if self.state.get("speed_mode") == "auto" and self.state["phase"] in ACTIVE:
-                raise RuntimeError("Straßentempo wird automatisch angepasst. Für festes Tempo zuerst die Fahrt beenden.")
+                raise RuntimeError("Road-aware speed adjusts automatically. Stop the drive before choosing fixed speed.")
             self._speed = value
 
     def stop(self):
         with self.lock:
             if self.state["phase"] not in ACTIVE:
                 return
-            self.state.update(phase="stopping", message="Simulation beenden und Löschbefehl senden …")
+            self.state.update(phase="stopping", message="Stopping simulation and sending the reset command …")
         self.stop_event.set()
 
     def recover(self):
         with self.lock:
             if not self._device:
-                raise RuntimeError("Bitte zuerst das zuvor verwendete iPhone verbinden.")
+                raise RuntimeError("Connect the previously used iPhone first.")
             udid = self._device["udid"]
         def clear():
             if self._connection == "wifi":
@@ -542,14 +542,14 @@ class Controller:
             with self.lock:
                 self._needs_clear = False
                 self._connected = True
-                self.state.update(phase="ready", message="Löschbefehl gesendet. Echten Standort in Apple Karten prüfen.")
-            self.log("Zurücksetzen angefordert. Position am iPhone überprüfen.")
-        self._begin_job("stopping", "Das iPhone wird zurückgesetzt …", clear)
+                self.state.update(phase="ready", message="Reset command sent. Check your real location in Apple Maps.")
+            self.log("Reset requested. Check the location on your iPhone.")
+        self._begin_job("stopping", "Resetting the iPhone location …", clear)
 
     def favorite(self, name, point, detail=""):
         name = str(name).strip()[:60]
         if not name:
-            raise ValueError("Bitte dem Ort einen Namen geben.")
+            raise ValueError("Give this place a name.")
         item = {"name": name, "point": coordinate(point), "detail": str(detail)[:100]}
         with self.lock:
             self.favorites = [x for x in self.favorites if x["name"] != name]

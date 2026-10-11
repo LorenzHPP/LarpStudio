@@ -45,7 +45,7 @@
     ctx.font = '400 22px Inter, sans-serif'; ctx.fillText('LARP STUDIO', 96, h - 64);
     ctx.textAlign = 'right'; ctx.fillText(template.toUpperCase() + ' / 01', w - 96, h - 64); ctx.textAlign = 'left';
     canvas.classList.toggle('has-picture', Boolean(picture));
-    $('artworkPanHint').textContent = picture ? 'Bild auf der Karte ziehen, um den Ausschnitt zu ändern.' : template.toUpperCase() + ' / 01';
+    $('artworkPanHint').textContent = picture ? 'Drag the image on the card to adjust the crop.' : template.toUpperCase() + ' / 01';
   }
   document.querySelectorAll('[data-template]').forEach(button => button.onclick = () => {
     template = button.dataset.template;
@@ -57,22 +57,22 @@
     const file = event.target.files[0], generation = ++imageGeneration;
     if (!file) return;
     if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > 15 * 1024 * 1024) {
-      toast('Bitte PNG, JPEG oder WebP bis 15 MB auswählen.', true); event.target.value = ''; return;
+      toast('Choose a PNG, JPEG or WebP image up to 15 MB.', true); event.target.value = ''; return;
     }
     const url = URL.createObjectURL(file);
     try {
       const loaded = new Image(); loaded.src = url; await loaded.decode();
       if (generation !== imageGeneration) return;
-      if (loaded.width * loaded.height > 40000000 || !loaded.width || !loaded.height) throw new Error('Bitte ein Bild mit höchstens 40 Megapixeln wählen.');
+      if (loaded.width * loaded.height > 40000000 || !loaded.width || !loaded.height) throw new Error('Choose an image with no more than 40 megapixels.');
       picture = loaded; pan = [0, 0]; $('artworkZoom').value = '1';
       $('artworkImageControls').hidden = false; $('artworkImageNote').textContent = file.name;
       draw();
-    } catch (error) { if (generation === imageGeneration) toast('Bild konnte nicht geladen werden: ' + error.message, true); }
+    } catch (error) { if (generation === imageGeneration) toast('Could not load image: ' + error.message, true); }
     finally { URL.revokeObjectURL(url); event.target.value = ''; }
   };
   $('artworkRemoveImage').onclick = () => {
     imageGeneration++; picture = null; pan = [0, 0]; $('artworkImageControls').hidden = true;
-    $('artworkImageNote').textContent = 'PNG, JPEG oder WebP · bis 15 MB.'; draw();
+    $('artworkImageNote').textContent = 'PNG, JPEG or WebP · up to 15 MB.'; draw();
   };
   canvas.addEventListener('pointerdown', event => {
     if (!picture) return;
@@ -91,14 +91,14 @@
       await document.fonts.ready; draw();
       if (window.pywebview?.api) {
         const result = await window.pywebview.api.save_artwork(canvas.toDataURL('image/png'));
-        if (!result.ok) throw new Error(result.error || 'Export fehlgeschlagen.');
-        if (result.data.saved) toast('Kartenbild als PNG gespeichert.');
+        if (!result.ok) throw new Error(result.error || 'Export failed.');
+        if (result.data.saved) toast('Card artwork saved as PNG.');
       } else {
         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-        if (!blob) throw new Error('PNG konnte nicht erstellt werden.');
+        if (!blob) throw new Error('Could not create the PNG.');
         const url = URL.createObjectURL(blob), link = document.createElement('a');
-        link.href = url; link.download = 'Larp-Studio-Kartenbild.png'; document.body.append(link); link.click(); link.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 30000); toast('PNG-Export gestartet.');
+        link.href = url; link.download = 'Larp-Studio-Artwork.png'; document.body.append(link); link.click(); link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 30000); toast('PNG export started.');
       }
     } catch (error) { toast(error.message, true); }
     finally { exporting = false; $('exportArtwork').disabled = false; }

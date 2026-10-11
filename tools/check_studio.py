@@ -17,6 +17,7 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as scratch:
     context.route('https://tile.openstreetmap.org/**', lambda route: route.fulfill(content_type='image/svg+xml', body='<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><rect width="256" height="256" fill="#ddd"/></svg>'))
     page = context.new_page(); page.on('pageerror', lambda error: errors.append(str(error)))
     page.goto(args.url, wait_until='networkidle')
+    expect(page.locator('html')).to_have_attribute('lang', 'en')
     expect(page.locator('.brand')).to_have_text('larp studio')
     page.locator('#artworkTab').click()
     expect(page.locator('#artworkWorkspace')).to_be_visible()
@@ -64,9 +65,15 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as scratch:
     assert page.locator('#savedRouteList b').count()==0
     page.locator('.saved-route-load').click()
     assert page.locator('.waypoint').count()==2 and page.evaluate('planned.length')==0
+    page.wait_for_function("""() => waypoints.every(({point}) => {
+        const p = map.latLngToContainerPoint(point);
+        const panel = document.querySelector('.sidebar').getBoundingClientRect();
+        return p.x > panel.right + 12 && p.x < map.getSize().x - 55
+            && p.y > 100 && p.y < map.getSize().y - 95;
+    })""")
     assert page.locator('#startButton').is_disabled()
     page.locator('#openRoutes').click(); page.locator('.saved-route-row .icon-button').click()
-    expect(page.locator('#savedRouteList')).to_contain_text('Noch keine Routen')
+    expect(page.locator('#savedRouteList')).to_contain_text('No saved routes')
     page.locator('#routeLibraryDialog .close-dialog').click()
     # Native bridge: image export and persistent route storage use actual APIs, not a browser-only download.
     native=context.new_page(); native.on('pageerror', lambda error:errors.append(str(error)))
@@ -77,7 +84,7 @@ with sync_playwright() as p, tempfile.TemporaryDirectory() as scratch:
       save_artwork:async d=>{window.exports.push(d);return {ok:true,data:{saved:true}}}}};
     """)
     native.goto(args.url,wait_until='networkidle'); native.locator('#artworkTab').click(); native.locator('#exportArtwork').click()
-    expect(native.locator('#toast')).to_contain_text('PNG gespeichert')
+    expect(native.locator('#toast')).to_contain_text('saved as PNG')
     assert len(native.evaluate('window.exports'))==1
     native.locator('#locationTab').click(); native.locator('[data-mode=walk]').click(); native.evaluate('setPoint([47.631,9.911])')
     native.locator('#saveRoute').click(); native.locator('#savedRouteName').fill('Native route'); native.locator('#saveRouteForm button[type=submit]').click()

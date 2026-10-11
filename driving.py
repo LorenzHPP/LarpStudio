@@ -14,31 +14,31 @@ BRAKING = 2.2
 class DrivingProfile:
     def __init__(self, route, samples):
         if not isinstance(samples, list) or not 3 <= len(samples) <= 100001:
-            raise ValueError("Für Straßentempo die Fahrroute neu planen.")
+            raise ValueError("Plan the driving route again to use road-aware speed.")
         self.distances, self.speeds = [], []
         for sample in samples:
             if not isinstance(sample, (list, tuple)) or len(sample) != 2:
-                raise ValueError("Ungültiges Fahrprofil. Route neu planen.")
+                raise ValueError("Invalid driving profile. Plan the route again.")
             d, v = map(float, sample)
             if not math.isfinite(d) or not math.isfinite(v) or d < 0 or not 0 <= v <= MAX_SPEED + 1e-6:
-                raise ValueError("Ungültiges Fahrprofil. Route neu planen.")
+                raise ValueError("Invalid driving profile. Plan the route again.")
             if self.distances and d <= self.distances[-1]:
-                raise ValueError("Die Fahrabschnitte müssen aufeinander folgen.")
+                raise ValueError("Driving sections must be consecutive.")
             self.distances.append(d)
             self.speeds.append(v)
         if abs(self.distances[0]) > 1e-6 or abs(self.distances[-1] - route.total) > .01:
-            raise ValueError("Das Fahrprofil passt nicht zur Route. Route neu planen.")
+            raise ValueError("The driving profile does not match the route. Plan it again.")
         if self.speeds[0] != 0 or self.speeds[-1] != 0:
-            raise ValueError("Das Fahrprofil muss am Start und Ziel anhalten.")
+            raise ValueError("The driving profile must stop at the start and destination.")
         self.times = [0.0]
         for i, (a, b) in enumerate(zip(self.distances, self.distances[1:])):
             v0, v1 = self.speeds[i:i + 2]
             if v0 + v1 <= 0:
-                raise ValueError("Ein Fahrabschnitt braucht ein gültiges Tempo.")
+                raise ValueError("A driving section needs a valid speed.")
             dt = 2 * (b - a) / (v0 + v1)
             acceleration = (v1 - v0) / dt
             if acceleration > ACCELERATION + 1e-5 or acceleration < -BRAKING - 1e-5:
-                raise ValueError("Das Fahrprofil beschleunigt oder bremst zu stark.")
+                raise ValueError("The driving profile accelerates or brakes too sharply.")
             self.times.append(self.times[-1] + dt)
         self.total = route.total
         self.duration = self.times[-1]
@@ -85,14 +85,14 @@ def build_driving_profile(route, legs):
         annotation = leg.get("annotation", {})
         lengths, durations, speeds = (annotation.get(k) for k in ("distance", "duration", "speed"))
         if not all(isinstance(x, list) for x in (lengths, durations, speeds)) or not len(lengths) == len(durations) == len(speeds):
-            raise ValueError("Der Routendienst liefert keine Abschnittsgeschwindigkeiten.")
+            raise ValueError("The routing service did not provide road-section speeds.")
         for d, t, v in zip(lengths, durations, speeds):
             d, t, v = float(d), float(t), float(v)
             if not all(math.isfinite(n) for n in (d, t, v)) or min(d, t, v) < 0 or (d > 0 and min(t, v) <= 0):
-                raise ValueError("Der Routendienst liefert ungültige Fahrabschnitte.")
+                raise ValueError("The routing service returned invalid driving sections.")
             caps.append(min(MAX_SPEED, v, d / t) if d > 0 else MAX_SPEED)
     if len(caps) != len(route.points) - 1 or route.total < 1:
-        raise ValueError("Straßentempo kann dieser Route nicht sicher zugeordnet werden.")
+        raise ValueError("Road-aware speed cannot be safely matched to this route.")
     # Keep every original road boundary. Add samples for smooth transitions;
     # bound the number of extra samples on unusually long world-map routes.
     count = max(2, min(40000, math.ceil(route.total / 10)))

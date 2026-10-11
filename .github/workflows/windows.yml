@@ -46,8 +46,8 @@ jobs:
       - name: Include source and license information
         shell: pwsh
         run: |
-          git archive --format=zip --output="dist/Larp Studio/Quellcode.zip" HEAD
-          Copy-Item LICENSE,THIRD-PARTY.md,README.md,README.de.md,START-HIER.txt,FINAL-START.txt,WLAN-ANLEITUNG.txt 'dist/Larp Studio/'
+          git archive --format=zip --output="dist/Larp Studio/Source.zip" HEAD
+          Copy-Item LICENSE,THIRD-PARTY.md,README.md,README.de.md,START-HERE.txt,START-HIER.txt,FINAL-START.txt,WLAN-ANLEITUNG.txt 'dist/Larp Studio/'
           python tools/package_sources.py 'dist/Larp Studio'
       - uses: actions/upload-artifact@v4
         with:

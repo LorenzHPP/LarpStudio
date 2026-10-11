@@ -19,7 +19,7 @@ Weitergeben eines gebauten Programms müssen auch die Lizenz- und
 Quellcodepflichten der enthaltenen Abhängigkeiten berücksichtigt werden.
 Die GitHub-EXE-Ausgabe enthält unter `Third-party/` ein Paketverzeichnis,
 Lizenzdateien und die passenden, per SHA-256 geprüften Quellarchive der
-GPL-/LGPL-Abhängigkeiten. `Quellcode.zip` enthält den zugehörigen App-Code
+GPL-/LGPL-Abhängigkeiten. `Source.zip` enthält den zugehörigen App-Code
 und die Build-Anweisungen.
 
 Kartendaten © OpenStreetMap contributors, ODbL:

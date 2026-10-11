@@ -92,7 +92,7 @@ class ControllerTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self.controller.start(plan)
         self.controller._needs_clear = True
-        with self.assertRaisesRegex(RuntimeError, "Zurücksetzen"):
+        with self.assertRaisesRegex(RuntimeError, "resetting"):
             self.controller.start({"mode": "pin", "points": [[47, 9]]})
 
     def test_pending_reset_keeps_original_phone(self):
@@ -141,7 +141,7 @@ class ControllerTests(unittest.TestCase):
         self.assertEqual(state["connection"], "wifi")
         self.assertEqual(state["phase"], "disconnected")
         self.assertEqual(self.device.wifi_prepared, ["selected-phone"])
-        with self.assertRaisesRegex(RuntimeError, "verbinden"):
+        with self.assertRaisesRegex(RuntimeError, "Connect"):
             self.controller.start({"mode": "pin", "points": [[47, 9]]})
         self.controller.favorite("Test", [47, 9])
         loaded = Controller(self.temp.name, self.device)
@@ -173,8 +173,8 @@ class ControllerTests(unittest.TestCase):
         with patch.object(self.controller, "_session", failed_session):
             self.controller.start({"mode": "pin", "points": [[47, 9]]})
             self.controller.thread.join(2)
-        self.assertIn("Verbindung fehlgeschlagen", self.controller.snapshot()["message"])
-        self.assertNotIn("Löschbefehl", self.controller.snapshot()["message"])
+        self.assertIn("Connection failed", self.controller.snapshot()["message"])
+        self.assertNotIn("Reset command", self.controller.snapshot()["message"])
         self.assertEqual(self.device.clears, [])
 
     def test_lost_wifi_can_reset_same_phone_via_usb(self):
@@ -246,7 +246,7 @@ class DeviceAndMapTests(unittest.TestCase):
     def test_usb_uses_exact_selected_device(self):
         device = DeviceClient(".")
         with patch.object(device, "call", return_value=["other-phone"]):
-            with self.assertRaisesRegex(RuntimeError, "ausgewähltes"):
+            with self.assertRaisesRegex(RuntimeError, "selected"):
                 device.usb("selected-phone")
 
     def test_route_uses_foot_or_car_and_validates(self):

@@ -16,7 +16,7 @@ PYTHON = ROOT / ".venv" / "Scripts" / "python.exe"
 
 def main():
     if sys.platform != "win32":
-        print("Dieser Starter ist für Windows.")
+        print("This launcher is for Windows.")
         return 1
     window = tk.Tk()
     window.title("Larp Studio")
@@ -28,8 +28,8 @@ def main():
     window.resizable(False, False)
     window.configure(bg="#141414")
     tk.Label(window, text="larp studio", font=("Segoe UI", 30, "bold"), fg="#f5f5f5", bg="#141414").pack(anchor="w", padx=30, pady=(24, 4))
-    tk.Label(window, text="Larp Studio wird vorbereitet.", font=("Segoe UI", 12), fg="#f5f5f5", bg="#141414").pack(anchor="w", padx=30)
-    message = tk.StringVar(value="Beim ersten Start werden die benötigten Dateien geladen.")
+    tk.Label(window, text="Preparing Larp Studio.", font=("Segoe UI", 12), fg="#f5f5f5", bg="#141414").pack(anchor="w", padx=30)
+    message = tk.StringVar(value="Required files are downloaded on your first launch.")
     label = tk.Label(window, textvariable=message, wraplength=418, justify="left", font=("Segoe UI", 10), fg="#b0b0b0", bg="#141414")
     label.pack(anchor="w", padx=30, pady=(16, 12))
     style = ttk.Style(window)
@@ -49,20 +49,20 @@ def main():
         try:
             with log.open("w", encoding="utf-8") as output:
                 if not PYTHON.is_file():
-                    events.put(("message", "Eine eigene Umgebung wird eingerichtet …"))
+                    events.put(("message", "Setting up a dedicated environment …"))
                     subprocess.run([sys.executable, "-m", "venv", str(ROOT / ".venv")], stdout=output, stderr=output, check=True, env=env, creationflags=subprocess.CREATE_NO_WINDOW)
                 stamp = ROOT / ".venv" / ".atlas-version"
                 expected = (ROOT / "requirements.txt").read_text(encoding="utf-8")
                 if not stamp.is_file() or stamp.read_text(encoding="utf-8") != expected:
-                    events.put(("message", "Die App-Dateien werden geladen. Das kann einige Minuten dauern."))
+                    events.put(("message", "Downloading app files. This may take a few minutes."))
                     subprocess.run([str(PYTHON), "-m", "pip", "--isolated", "--disable-pip-version-check", "install", "--index-url", "https://pypi.org/simple", "-r", str(ROOT / "requirements.txt")], stdout=output, stderr=output, check=True, env=env, creationflags=subprocess.CREATE_NO_WINDOW)
                     stamp.write_text(expected, encoding="utf-8")
-                events.put(("message", "Larp Studio öffnet sich …"))
+                events.put(("message", "Opening Larp Studio …"))
                 process = subprocess.Popen([str(PYTHON), str(ROOT / "app.py")], stdout=output, stderr=output, env=env, creationflags=subprocess.CREATE_NO_WINDOW)
                 try:
                     code = process.wait(timeout=5)
                     if code:
-                        raise RuntimeError("Larp Studio konnte nicht geöffnet werden.")
+                        raise RuntimeError("Could not open Larp Studio.")
                 except subprocess.TimeoutExpired:
                     pass
             events.put(("done", ""))
@@ -81,8 +81,8 @@ def main():
                 elif kind == "error":
                     progress.stop()
                     progress.pack_forget()
-                    message.set("Larp Studio konnte nicht starten. Details stehen in Larp Studio-Start.log. Falls WebView2 fehlt, installiere die Microsoft-Komponente über den Button unten und starte Larp Studio erneut.")
-                    tk.Button(actions, text="Startprotokoll öffnen", command=lambda: os.startfile(log), bg="#f5f5f5", fg="#141414", relief="flat", padx=10, pady=7).pack(side="left", padx=(0, 8))
+                    message.set("Larp Studio could not start. See Larp Studio-Start.log for details. If WebView2 is missing, install it using the button below and launch Larp Studio again.")
+                    tk.Button(actions, text="Open startup log", command=lambda: os.startfile(log), bg="#f5f5f5", fg="#141414", relief="flat", padx=10, pady=7).pack(side="left", padx=(0, 8))
                     tk.Button(actions, text="WebView2", command=lambda: webbrowser.open("https://developer.microsoft.com/microsoft-edge/webview2/"), bg="#353535", fg="#e8edef", relief="flat", padx=10, pady=7).pack(side="left")
         except queue.Empty:
             pass

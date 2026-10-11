@@ -1,4 +1,9 @@
-# Larp Studio · 1.3
+# Larp Studio · 1.4
+
+Version 1.4 verwendet eine englische Oberfläche und schwebende Glass-Panels
+im Schwarz-Weiß-Theme. Die aktuelle englische Kurzanleitung steht in
+**START-HERE.txt**. Diese deutsche Anleitung beschreibt die gleichen Funktionen;
+einige ältere Schaltflächennamen sind hier noch auf Deutsch angegeben.
 
 Ein persönliches Windows-Studio für Standortsimulation am eigenen iPhone,
 gespeicherte Routen und selbst gestaltete Kartenbilder. Reduziertes
@@ -9,8 +14,8 @@ Repository: https://github.com/LorenzHPP/LarpStudio
 Die öffentliche Version startet an einem öffentlichen Beispielort:
 Brandenburger Tor, Berlin. Eigene Orte und WLAN-Gerätedaten bleiben lokal.
 
-Die Oberfläche verwendet flache Flächen, schlichte Linien-Symbole und eine
-kompakte Seitenleiste. Karte oben rechts zwischen Dunkel und Hell wechseln;
+Die Oberfläche verwendet leicht transparente Flächen, schlichte Linien-Symbole
+und eine schwebende Seitenleiste. Karte oben rechts zwischen Dark und Light wechseln;
 beide Ansichten sind monochrom. Die Auswahl wird lokal gespeichert.
 Schrift, Symbole und Windows-Icon sind lokal gebündelt. Alle bisherigen
 Funktionen einschließlich einzelner Punktlöschung und des experimentellen
