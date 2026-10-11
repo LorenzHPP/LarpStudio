@@ -23,9 +23,11 @@ jobs:
         run: |
           $result = Join-Path $env:RUNNER_TEMP 'larp-cli.json'
           $process = Start-Process -FilePath '.\dist\Larp Studio\Larp Studio.exe' -ArgumentList "--device-cli `"$result`" --help" -Wait -PassThru
-          if ($process.ExitCode -ne 0) { throw "Packaged CLI failed: $($process.ExitCode)" }
           if (-not (Test-Path $result)) { throw 'Packaged CLI produced no result' }
           $reply = Get-Content -Raw $result | ConvertFrom-Json
+          Write-Output "Device CLI exit code: $($reply.code)"
+          if ($reply.stderr) { Write-Output $reply.stderr }
+          if ($process.ExitCode -ne 0) { throw "Packaged CLI failed: $($process.ExitCode)" }
           if ($reply.code -ne 0 -or $reply.stdout -notmatch 'Usage:') { throw 'Packaged CLI failed to load its dependencies' }
       - name: Verify native Windows interface starts
         shell: pwsh
@@ -51,3 +53,13 @@ jobs:
           path: dist/Larp Studio/
           retention-days: 30
           if-no-files-found: error
+      - name: Save startup diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Larp-Studio-startup-diagnostics
+          path: |
+            ${{ runner.temp }}/larp-cli.json
+            ${{ runner.temp }}/larp-ui.json
+            build/Larp Studio/warn-Larp Studio.txt
+          if-no-files-found: ignore
