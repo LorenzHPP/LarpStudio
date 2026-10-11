@@ -73,10 +73,20 @@ Ausgeführt in einer Linux-Umgebung ohne angeschlossenes iPhone:
 - JavaScript-Syntax und Python-Importe geprüft. Geräte-CLI über die gepinnte
   pymobiledevice3-Version ausgeführt: Hilfe erfolgreich über Datei-IPC empfangen.
 
+Zusätzlich auf GitHubs Windows-Runner geprüft:
+
+- Eigenständige EXE mit Python 3.13 und PyInstaller 6.22.3 gebaut.
+- Gebündelte Geräte-CLI mit ihren DLLs und Paketinformationen erfolgreich
+  gestartet; Hilfe per Datei-IPC empfangen.
+- Native WebView2-Oberfläche geöffnet: Dokumenttitel, Kartenbild-Canvas
+  (1536 × 969) und Geräte-/Routen-/Export-API erfolgreich geladen.
+  Das interne Fensterobjekt wird nicht als JavaScript-API veröffentlicht.
+- Offline-Tests und JavaScript-Syntax auf Windows und Linux erfolgreich.
+- [Windows-Build mit Starttests](https://github.com/LorenzHPP/LarpStudio/actions/runs/38164734618).
+
 Noch nicht geprüft:
 
-- Start und Darstellung der nativen WebView2-App auf Windows.
-- Erstellung und Ausführung des optionalen Windows-EXE-Builds.
+- Visuelle Darstellung und echter Speicherdialog auf deinem Windows-PC.
 - USB-Tunnel, Developer Disk Image und Standortbefehle an einem echten iPhone.
 - WLAN-Paarung, Gerätediscovery und Kabel-unabhängiger Betrieb auf Windows
   mit iOS 27.2; Router, Firewall und Sperrzustand können das Verhalten ändern.

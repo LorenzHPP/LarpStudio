@@ -30,6 +30,13 @@ device selections, and pairing files are kept out of the repository.
 
 ## Run on Windows
 
+For the prebuilt app, open the [verified Windows build](https://github.com/LorenzHPP/LarpStudio/actions/runs/38164734618)
+and download **Larp-Studio-Windows** under **Artifacts** (GitHub sign-in required).
+Extract the entire ZIP and open **Larp Studio.exe**. Python is included;
+Microsoft Edge WebView2 Runtime and Apple USB drivers are still required.
+
+To run from source:
+
 1. Download the source ZIP and extract the entire folder.
 2. Install Python 3.13, Microsoft Edge WebView2 Runtime, and working Apple
    USB drivers if they are not already installed.
@@ -58,7 +65,9 @@ and WebView2 are still required. Artifacts expire after 30 days.
 
 For a local build, first run the source app once, then open
 **EXE-erstellen.cmd**. The output is `dist/Larp Studio/Larp Studio.exe`.
-No prebuilt EXE has been verified for this version yet.
+The packaged device CLI and native WebView2 window passed startup checks on
+GitHub's Windows runner. The checks load the card editor and route API without
+connecting an iPhone. See [testing notes](PRUEFUNG.md) for hardware limitations.
 
 ## Development
 

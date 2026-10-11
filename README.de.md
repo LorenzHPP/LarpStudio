@@ -62,7 +62,7 @@ Das ist eine technische Mindestversion, keine Zusage für jede iOS-Version.
   wird die Strecke samt Tempo neu geplant; alte Abschnittsdaten werden
   nicht als aktuell übernommen. In der Desktop-App bleibt die Bibliothek
   in `.larp-routes.json` neben dem Programm, auch nach einem Neustart.
-- **GitHub-Workflows vorbereitet:** Offline-Tests auf Windows und Linux bei jedem Push. Ein
+- **GitHub-Workflows:** Offline-Tests auf Windows und Linux bei jedem Push. Ein
   manueller Windows-Build unter **Actions → Windows app → Run workflow**
   erzeugt eine eigenständige EXE mit Dateien und zugehörigem Quellcode.
   Das Artefakt heißt **Larp-Studio-Windows** und bleibt 30 Tage verfügbar.
@@ -189,8 +189,12 @@ Windows-PC eine EXE mit PyInstaller bauen. Ergebnis:
 Python wird anschließend für diesen Ordner nicht mehr benötigt; Apple-Treiber,
 WebView2 und die Geräte-Voraussetzungen bleiben nötig.
 
-Der EXE-Build wurde hier nicht ausgeführt. Das Downloadpaket ist das vollständige
-Quellprogramm mit Starter und enthält keine vorgebaute Windows-EXE.
+Die EXE wurde auf GitHubs Windows-Runner gebaut und gestartet. Geräte-CLI,
+WebView2-Fenster, Kartenbild-Canvas und Routen-API bestanden den Starttest.
+Unter [diesem erfolgreichen Build](https://github.com/LorenzHPP/LarpStudio/actions/runs/38164734618)
+das Artefakt **Larp-Studio-Windows** herunterladen (bei GitHub anmelden),
+vollständig entpacken und **Larp Studio.exe** öffnen. Kein Python nötig.
+Der Betrieb an deinem echten iPhone bleibt separat zu prüfen.
 
 ## Entwickeln / Prüfen
 

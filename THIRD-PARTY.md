@@ -8,6 +8,7 @@ Larp Studio-Quellcode: GPL-3.0-or-later; vollständiger Text in `LICENSE`.
 | Inter Variable | lokal gebündelt | SIL Open Font License 1.1, `ui/assets/INTER-LICENSE.txt`, https://github.com/rsms/inter |
 | pywebview | 6.2.1 | BSD-3-Clause, `licenses/PYWEBVIEW.txt`, https://github.com/r0x0r/pywebview |
 | pymobiledevice3 | 11.26.0 | GPL-3.0-or-later, `licenses/PYMOBILEDEVICE3.txt`, https://github.com/doronz88/pymobiledevice3 |
+| pytun-pmd3 / Wintun | über pymobiledevice3 | Hinweise und Wintun-Lizenz im gebündelten Paket, https://github.com/doronz88/pytun-pmd3 |
 | Python | vom PC | PSF-Lizenz, https://www.python.org/psf/license/ |
 | PyInstaller (optional) | 6.22.3 | GPL mit Bootloader-Ausnahme, https://pyinstaller.org/en/stable/license.html |
 
@@ -16,6 +17,10 @@ PyPI geladen; sie werden im Quell-Download nicht vorinstalliert mitgeliefert.
 Ihre Lizenzdateien bleiben in der installierten Umgebung erhalten. Beim
 Weitergeben eines gebauten Programms müssen auch die Lizenz- und
 Quellcodepflichten der enthaltenen Abhängigkeiten berücksichtigt werden.
+Die GitHub-EXE-Ausgabe enthält unter `Third-party/` ein Paketverzeichnis,
+Lizenzdateien und die passenden, per SHA-256 geprüften Quellarchive der
+GPL-/LGPL-Abhängigkeiten. `Quellcode.zip` enthält den zugehörigen App-Code
+und die Build-Anweisungen.
 
 Kartendaten © OpenStreetMap contributors, ODbL:
 https://www.openstreetmap.org/copyright

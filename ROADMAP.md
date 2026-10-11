@@ -11,7 +11,8 @@
 - [x] Eigenes Kartenbild-Studio mit PNG-Export
 - [x] Experimentelles WLAN mit vorheriger USB-Vorbereitung
 - [x] Workflows für GitHub-Tests und manuellen Windows-EXE-Build vorbereiten
-- [ ] Quellcode hochladen und Windows-Build ausführen
+- [x] Quellcode hochladen und Windows-Build ausführen
+- [x] Gebündelte Geräte-CLI und natives Windows-Fenster starten und prüfen
 
 ## Nächste Prüfungen
 
