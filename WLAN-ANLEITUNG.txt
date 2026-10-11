@@ -1,0 +1,30 @@
+LARP STUDIO OHNE USB-KABEL – EXPERIMENTELL
+
+1. PC und iPhone mit demselben Heimnetz verbinden.
+   PC per LAN am selben Router ist auch möglich; kein isoliertes Gastnetz.
+
+2. Larp Studio öffnen. iPhone zunächst per USB anschließen und entsperren.
+   „WLAN vorbereiten“ → „Jetzt per USB vorbereiten“ wählen.
+   Warten, bis die Vorbereitung fertig ist. Noch keinen Standort starten.
+
+3. Larp Studio schaltet auf WLAN. „Verbinden“ klicken.
+   Nur nach erfolgreicher WLAN-Prüfung das Kabel abziehen.
+
+4. Punkt oder Route auswählen und starten. Zuerst Apple Karten prüfen.
+
+Der PC und Larp Studio müssen laufen. Das iPhone muss im selben Netzwerk bleiben.
+Außerhalb des Netzwerks läuft eine Route ohne PC-Verbindung mit dieser
+Methode nicht zuverlässig weiter. Die App nimmt keine Routerfreigaben vor.
+
+Bei einer Windows-Firewall-Abfrage die Verbindung für dein eigenes privates
+Heimnetz erlauben. Ein isoliertes Gastnetz kann die Gerätesuche verhindern.
+
+WLAN-Verbindung bricht ab / Standort lässt sich nicht zurücksetzen:
+• Dasselbe iPhone wieder per USB anschließen.
+• In Larp Studio „USB“ wählen und „Echten Standort wiederherstellen“ klicken.
+• In Apple Karten prüfen; bei Bedarf das iPhone neu starten.
+
+Nach einem iPhone-Neustart kann USB-Vorbereitung erneut nötig sein.
+An deinem iOS 27.2 noch nicht praktisch geprüft; keine Stabilitätsgarantie.
+
+Für den bisherigen USB-Betrieb: START-HIER.txt.

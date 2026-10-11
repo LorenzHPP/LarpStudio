@@ -1,0 +1,6 @@
+{
+  "tiles": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  "geocoder": "https://photon.komoot.io/api/",
+  "walking": "https://routing.openstreetmap.de/routed-foot/route/v1/driving/",
+  "driving": "https://routing.openstreetmap.de/routed-car/route/v1/driving/"
+}

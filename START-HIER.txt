@@ -1,0 +1,37 @@
+LARP STUDIO · 1.3
+
+QUELLPACKET STARTEN
+1. ZIP komplett entpacken.
+2. Start-Larp Studio.cmd doppelklicken.
+3. Beim ersten Start die Einrichtung abwarten.
+
+Benötigt: Windows 10/11, Python 3.13, WebView2 und Apple-USB-Treiber.
+Die EXE-Ausgabe aus GitHub Actions benötigt kein separat installiertes Python:
+deren kompletten Ordner entpacken und Larp Studio.exe öffnen.
+
+STANDORT
+USB verbinden, iPhone entsperren, dem PC vertrauen, Entwicklermodus aktivieren.
+Verbinden wählen, Ort auf der Karte setzen und starten. Zuerst in Apple
+Karten prüfen. Beenden oder Echten Standort wiederherstellen zum Zurücksetzen.
+Bei einem verbleibenden falschen Ort das iPhone bei Bedarf neu starten.
+
+ROUTEN
+Gehen, Joggen oder Fahren wählen, mindestens zwei Punkte setzen, planen.
+Einzelne Punkte über × oder das Kartenpopup entfernen.
+Route speichern hält die Punkte lokal in deiner Routenbibliothek fest.
+Straßentempo passt beim Fahren Tempo und Fahrzeit an die Abschnittsdaten an;
+keine Live-Staus oder verlässliche Auskunft über aktuelle Tempolimits.
+
+KARTENBILDER
+Oben Kartenbilder wählen. Vorlage, Text, Farben oder eigenes Bild einstellen.
+PNG exportieren speichert ein Bild mit 1536 × 969 Pixeln. Das überträgt noch
+nichts auf Apple Wallet. AirCard-Kompatibilität separat prüfen; für iOS 27.2
+laut Projekt nur Beta 1–2, ab Beta 3 gepatcht.
+
+OHNE KABEL
+WLAN-ANLEITUNG.txt lesen. PC und iPhone müssen im selben Netzwerk bleiben.
+Der PC und Larp Studio müssen weiterlaufen.
+
+WEITERE HILFE
+README.md · FINAL-START.txt · PRUEFUNG.md
+GitHub: https://github.com/LorenzHPP/LarpStudio

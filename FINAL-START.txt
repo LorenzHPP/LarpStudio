@@ -1,0 +1,28 @@
+LARP STUDIO · 1.3
+
+VON ATLAS AKTUALISIEREN
+1. Atlas schließen.
+2. ZIP vollständig entpacken.
+3. Den Inhalt des enthaltenen Ordners in den bisherigen Programmordner
+   kopieren. Vorhandene Dateien ersetzen, ui zusammenführen.
+4. .venv und .atlas-data.json behalten: Installation, Orte und WLAN-Gerät.
+5. Start-Larp Studio.cmd starten. Desktop-Verknuepfung.cmd erstellt das neue Icon.
+
+NEUE INSTALLATION
+START-HIER.txt lesen. Der Quellstarter benötigt Python 3.13.
+Die GitHub-EXE-Ausgabe komplett entpacken und Larp Studio.exe starten;
+kein Python nötig. Apple-Treiber und WebView2 bleiben nötig.
+
+NEU
+Larp Studio statt Atlas. Gleiches reduziertes Schwarz-Weiß-Design.
+Kartenbilder: drei Vorlagen, eigene Bilder, Zoom/Verschieben, Texte und Farben.
+PNG-Export mit 1536 × 969 Pixeln; keine automatische Änderung in Apple Wallet.
+Routenbibliothek: Punkte und Modus lokal speichern, laden und löschen.
+Nach dem Laden die Strecke neu planen, um aktuelle Abschnittsdaten zu verwenden.
+
+PRÜFEN
+USB und WLAN sowie die Anzeige in Apple Karten an deinem iPhone prüfen.
+Die Tests hier ersetzen keinen Hardwaretest auf deinem iOS 27.2.
+Snapchat kann eine andere Position anzeigen.
+
+GitHub: https://github.com/LorenzHPP/LarpStudio
