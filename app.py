@@ -34,7 +34,7 @@ def reply(call):
 class Bridge:
     def __init__(self, controller, maps):
         self._controller, self._maps = controller, maps
-        self.window = None
+        self._window = None
         from route_library import RouteLibrary
         self._routes = RouteLibrary(controller.root) if controller is not None else None
 
@@ -49,9 +49,9 @@ class Bridge:
             from artwork import decode_artwork
             import webview
             image = decode_artwork(data_url)
-            if self.window is None:
+            if self._window is None:
                 raise RuntimeError("Das Programmfenster ist noch nicht bereit.")
-            paths = self.window.create_file_dialog(webview.FileDialog.SAVE,
+            paths = self._window.create_file_dialog(webview.FileDialog.SAVE,
                 save_filename="Larp-Studio-Kartenbild.png", file_types=("PNG-Bild (*.png)",))
             if not paths:
                 return {"saved": False}
@@ -145,6 +145,7 @@ def main():
     if sys.platform != "win32":
         print("Der Desktop-Starter ist für Windows. Karten-Vorschau: python app.py --preview")
         return 1
+    smoke_output = Path(sys.argv[sys.argv.index("--smoke-ui") + 1]) if "--smoke-ui" in sys.argv else None
     import asyncio
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     import webview
@@ -156,16 +157,38 @@ def main():
     bridge = Bridge(controller, maps)
     window = webview.create_window("Larp Studio", str(ROOT / "ui" / "index.html"),
                                    js_api=bridge, width=1400, height=920, min_size=(1024, 700),
-                                   background_color="#141414", text_select=True)
-    bridge.window = window
+                                   background_color="#141414", text_select=True, hidden=bool(smoke_output))
+    bridge._window = window
     def closing():
         if controller.shutdown(timeout=15):
             return True
         return window.create_confirmation_dialog("Standort noch prüfen", "Das Zurücksetzen ist noch nicht bestätigt. Prüfe Apple Karten und starte das iPhone bei Bedarf neu. App trotzdem schließen?")
     window.events.closing += closing
-    webview.start(gui="edgechromium", http_server=True, user_agent="LarpStudio/1.3 (Windows desktop map)", private_mode=False,
+    smoke_result = {"ok": False, "error": "Window did not start"}
+    def check_ui():
+        try:
+            if not window.events.loaded.wait(45):
+                raise RuntimeError("Timed out loading the Windows interface")
+            result = window.evaluate_js("""(() => ({
+                title: document.title,
+                canvas: [document.getElementById('artworkCanvas').width, document.getElementById('artworkCanvas').height],
+                native: document.getElementById('previewBadge').hidden,
+                api: Object.keys(window.pywebview.api),
+                functions: ['get_state','save_artwork','get_routes','save_routes','start_session'].every(k => typeof window.pywebview.api[k] === 'function')
+            }))()""")
+            if result["title"] != "Larp Studio" or result["canvas"] != [1536, 969] or not result["functions"]:
+                raise RuntimeError("Windows interface or API failed to load: " + json.dumps(result))
+            if any(k == "window" or k.startswith("window.") for k in result["api"]):
+                raise RuntimeError("Internal window object was exposed in the JS API")
+            smoke_result.update(ok=True, error=None, details=result)
+        except Exception as exc:
+            smoke_result.update(ok=False, error=str(exc))
+        finally:
+            smoke_output.write_text(json.dumps(smoke_result), encoding="utf-8")
+            window.destroy()
+    webview.start(check_ui if smoke_output else None, gui="edgechromium", http_server=True, user_agent="LarpStudio/1.3 (Windows desktop map)", private_mode=False,
                   icon=str(ROOT / "ui" / "assets" / "larp-studio.ico"))
-    return 0
+    return (0 if smoke_result["ok"] else 1) if smoke_output else 0
 
 
 if __name__ == "__main__":

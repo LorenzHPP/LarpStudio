@@ -40,12 +40,12 @@ class StudioTests(unittest.TestCase):
         def dialog(*args, **kwargs):
             dialogs.append(kwargs)
             return None
-        bridge.window = SimpleNamespace(create_file_dialog=dialog)
+        bridge._window = SimpleNamespace(create_file_dialog=dialog)
         with patch.dict(sys.modules, {'webview': SimpleNamespace(FileDialog=SimpleNamespace(SAVE=30))}):
             self.assertEqual(bridge.save_artwork(url), {'ok': True, 'data': {'saved': False}})
             with tempfile.TemporaryDirectory() as root:
                 path = Path(root) / 'Kartenbild.png'
-                bridge.window.create_file_dialog = lambda *a, **k: [str(path)]
+                bridge._window.create_file_dialog = lambda *a, **k: [str(path)]
                 self.assertEqual(bridge.save_artwork(url), {'ok': True, 'data': {'saved': True}})
                 self.assertEqual(path.read_bytes(), raw)
         self.assertEqual(dialogs[0]['save_filename'], 'Larp-Studio-Kartenbild.png')
@@ -53,7 +53,7 @@ class StudioTests(unittest.TestCase):
     def test_invalid_export_does_not_open_dialog(self):
         from types import SimpleNamespace
         bridge = Bridge(None, None)
-        bridge.window = SimpleNamespace(create_file_dialog=lambda *a, **k: self.fail('Must not open dialog'))
+        bridge._window = SimpleNamespace(create_file_dialog=lambda *a, **k: self.fail('Must not open dialog'))
         self.assertFalse(bridge.save_artwork('bad')['ok'])
 
     def test_routes_survive_restart_and_delete_without_touching_device_data(self):

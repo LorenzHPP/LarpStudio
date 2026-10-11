@@ -6,6 +6,7 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -26,6 +27,19 @@ jobs:
           if (-not (Test-Path $result)) { throw 'Packaged CLI produced no result' }
           $reply = Get-Content -Raw $result | ConvertFrom-Json
           if ($reply.code -ne 0 -or $reply.stdout -notmatch 'Usage:') { throw 'Packaged CLI failed to load its dependencies' }
+      - name: Verify native Windows interface starts
+        shell: pwsh
+        run: |
+          $result = Join-Path $env:RUNNER_TEMP 'larp-ui.json'
+          $process = Start-Process -FilePath '.\dist\Larp Studio\Larp Studio.exe' -ArgumentList "--smoke-ui `"$result`"" -PassThru
+          if (-not $process.WaitForExit(90000)) {
+            $process.Kill()
+            throw 'Windows interface startup timed out'
+          }
+          if (-not (Test-Path $result)) { throw 'Windows interface produced no result' }
+          $reply = Get-Content -Raw $result | ConvertFrom-Json
+          Write-Output ($reply | ConvertTo-Json -Depth 5)
+          if ($process.ExitCode -ne 0 -or -not $reply.ok) { throw 'Windows interface failed its startup check' }
       - name: Include source and license information
         shell: pwsh
         run: |
