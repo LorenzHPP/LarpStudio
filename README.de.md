@@ -198,7 +198,7 @@ WebView2 und die Geräte-Voraussetzungen bleiben nötig.
 
 Die EXE wurde auf GitHubs Windows-Runner gebaut und gestartet. Geräte-CLI,
 WebView2-Fenster, Kartenbild-Canvas und Routen-API bestanden den Starttest.
-Unter [diesem erfolgreichen Build](https://github.com/LorenzHPP/LarpStudio/actions/runs/38165709646)
+Unter [diesem erfolgreichen Build](https://github.com/LorenzHPP/LarpStudio/actions/runs/38560327984)
 das Artefakt **Larp-Studio-Windows** herunterladen (bei GitHub anmelden),
 vollständig entpacken und **Larp Studio.exe** öffnen. Kein Python nötig.
 Der Betrieb an deinem echten iPhone bleibt separat zu prüfen.

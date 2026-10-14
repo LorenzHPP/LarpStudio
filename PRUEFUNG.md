@@ -1,4 +1,15 @@
-# Prüfumfang · 11.10.2026 · Larp Studio 1.4
+# Prüfumfang · 14.10.2026 · Larp Studio 1.4.1
+
+Version 1.4.1 zusätzlich geprüft:
+
+- Windows-Download enthält genau eine Larp Studio.exe, ohne Bibliotheksordner.
+- Starttest der Einzel-EXE und Aufruf der Geräte-CLI aus dem laufenden nativen
+  Fenster bestanden. Beide verwenden das gebündelte Programm ohne externes Python.
+- AppData-Speicher und alte Datenübernahme geprüft: Verschieben der EXE behält
+  die Daten; vorhandene Einstellungen werden nicht überschrieben; ungültige
+  Altdaten werden nicht importiert. Alte Dateien bleiben erhalten.
+- 42 Backend-Tests bestanden. Windows-/Linux-CI und Einzel-EXE-Build erfolgreich.
+- Quellcode und Lizenzunterlagen stehen als separates, optionales Artefakt bereit.
 
 Version 1.4 zusätzlich geprüft:
 
@@ -97,7 +108,7 @@ Zusätzlich auf GitHubs Windows-Runner geprüft:
   (1536 × 969) und Geräte-/Routen-/Export-API erfolgreich geladen.
   Das interne Fensterobjekt wird nicht als JavaScript-API veröffentlicht.
 - Offline-Tests und JavaScript-Syntax auf Windows und Linux erfolgreich.
-- [Windows-Build mit Starttests](https://github.com/LorenzHPP/LarpStudio/actions/runs/38165709646).
+- [Windows-Build mit Starttests](https://github.com/LorenzHPP/LarpStudio/actions/runs/38560327984).
 
 Noch nicht geprüft:
 

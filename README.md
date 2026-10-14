@@ -6,6 +6,8 @@ A Windows toolkit for location simulation, smart routes, and custom card
 artwork. Built with a monochrome glass interface, with more LARP features
 on the way.
 
+Version 1.4.1 packages the app as one standalone EXE, with settings in Windows AppData.
+
 Version 1.4 adds a fully English interface, floating translucent panels,
 and map framing that keeps pins and routes clear of the controls.
 
@@ -35,7 +37,7 @@ device selections, and pairing files are kept out of the repository.
 
 ## Run on Windows
 
-For the prebuilt app, open the [verified Windows build](https://github.com/LorenzHPP/LarpStudio/actions/runs/38165709646)
+For the prebuilt app, open the [verified Windows build](https://github.com/LorenzHPP/LarpStudio/actions/runs/38560327984)
 and download **Larp-Studio-Windows** under **Artifacts** (GitHub sign-in required).
 Extract the entire ZIP and open **Larp Studio.exe**. Python is included;
 Microsoft Edge WebView2 Runtime and Apple USB drivers are still required.
