@@ -10,8 +10,8 @@ if not exist ".venv\Scripts\python.exe" (
 if errorlevel 1 goto failed
 ".venv\Scripts\python.exe" -m PyInstaller --noconfirm --clean "Larp Studio.spec"
 if errorlevel 1 goto failed
-echo Done: dist\Larp Studio\Larp Studio.exe
-echo Keep all files in dist\Larp Studio together.
+echo Done: dist\Larp Studio.exe
+echo This EXE includes its required libraries and interface files.
 pause
 exit /b 0
 :failed

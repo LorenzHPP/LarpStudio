@@ -85,7 +85,7 @@ class DeviceClient:
             try:
                 while True:
                     if cancel is not None and cancel.is_set():
-                        raise RuntimeError("Vorbereitung abgebrochen.")
+                        raise RuntimeError("Preparation cancelled.")
                     if timeout is not None and time.monotonic() - began > timeout:
                         raise RuntimeError("The device connection timed out.")
                     try:

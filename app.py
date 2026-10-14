@@ -150,8 +150,9 @@ def main():
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     import webview
     from engine import Controller, Maps
-    data_root = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else ROOT
-    # Config lives beside the app, assets may be in a PyInstaller bundle.
+    from storage import data_directory
+    data_root = data_directory(ROOT)
+    # A standalone EXE keeps user data in AppData and bundled assets in _MEIPASS.
     controller = Controller(data_root)
     maps = Maps(ROOT)
     bridge = Bridge(controller, maps)
@@ -180,14 +181,16 @@ def main():
                 raise RuntimeError("Windows interface or API failed to load: " + json.dumps(result))
             if any(k == "window" or k.startswith("window.") for k in result["api"]):
                 raise RuntimeError("Internal window object was exposed in the JS API")
+            controller.device.call(["--help"], timeout=45)
+            result["embedded_cli"] = True
             smoke_result.update(ok=True, error=None, details=result)
         except Exception as exc:
             smoke_result.update(ok=False, error=str(exc))
         finally:
             smoke_output.write_text(json.dumps(smoke_result), encoding="utf-8")
             window.destroy()
-    webview.start(check_ui if smoke_output else None, gui="edgechromium", http_server=True, user_agent="LarpStudio/1.4 (Windows desktop map)", private_mode=False,
-                  icon=str(ROOT / "ui" / "assets" / "larp-studio.ico"))
+    webview.start(check_ui if smoke_output else None, gui="edgechromium", http_server=True, user_agent="LarpStudio/1.4.1 (Windows desktop map)", private_mode=False,
+                  icon=str(ROOT / "ui" / "assets" / "larp-studio.ico"), storage_path=str(data_root / "WebView"))
     return (0 if smoke_result["ok"] else 1) if smoke_output else 0
 
 

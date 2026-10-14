@@ -26,4 +26,4 @@ jobs:
           node --check ui/studio.js
           node --check ui/library.js
       - name: Compile Python source
-        run: python -m compileall -q app.py bootstrap.py engine.py transport.py driving.py artwork.py route_library.py
+        run: python -m compileall -q app.py bootstrap.py engine.py transport.py driving.py artwork.py route_library.py storage.py

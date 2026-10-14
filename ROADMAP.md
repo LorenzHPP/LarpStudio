@@ -1,5 +1,11 @@
 # Larp Studio
 
+## Version 1.4.1 · Standalone
+
+- [x] One EXE, with no separate library folder in the app download
+- [x] Store settings in Windows AppData and preserve old saved places/routes
+- [x] Offer source code and license notices as a separate download
+
 ## Version 1.4 · Glass Edition
 
 - [x] English interface, dialogs, status messages, errors and setup window

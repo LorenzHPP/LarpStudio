@@ -1,9 +1,9 @@
-LARP STUDIO 1.4 · GLASS EDITION
+LARP STUDIO 1.4.1 · GLASS EDITION
 
 WINDOWS APP
-1. Extract the entire ZIP to a folder you can write to.
-2. Keep Larp Studio.exe and _internal together.
-3. Open Larp Studio.exe. No separate Python installation is needed.
+1. Extract Larp Studio.exe from the download ZIP.
+2. Open Larp Studio.exe. It is the only program file you need to keep.
+3. Allow a moment for bundled components to load. Python is included.
 
 Requires Windows 10/11, Microsoft Edge WebView2 Runtime and working Apple
 USB drivers. If no iPhone is connected, the map and artwork editor still open.
@@ -33,9 +33,11 @@ Keep the PC and Larp Studio running. A session cannot continue independently
 when the phone leaves the network.
 
 UPDATING
-Stop any running session and close the old app. Extract this version separately.
-To keep your saved places and routes, copy .atlas-data.json and .larp-routes.json
-from the previous program folder to the folder containing Larp Studio.exe.
+Stop any running session and close the old app. Settings now live in
+%LOCALAPPDATA%\Larp Studio, so you can move the EXE without losing your routes.
+To import an old installation, place the new EXE next to its .atlas-data.json
+and .larp-routes.json files once and launch it. They are copied into AppData
+only if no corresponding settings file is already there. The old files stay intact.
 
 Device operation, Wi-Fi stability and resetting on your iOS 27.2 still need
 testing on your own iPhone. Windows startup checks do not replace that test.

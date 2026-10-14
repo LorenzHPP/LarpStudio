@@ -66,7 +66,8 @@ Das ist eine technische Mindestversion, keine Zusage für jede iOS-Version.
   einen Namen vergeben. Bis zu 20 Routen laden oder löschen. Beim Laden
   wird die Strecke samt Tempo neu geplant; alte Abschnittsdaten werden
   nicht als aktuell übernommen. In der Desktop-App bleibt die Bibliothek
-  in `.larp-routes.json` neben dem Programm, auch nach einem Neustart.
+  in `.larp-routes.json`, auch nach einem Neustart. Die Einzel-EXE speichert
+  ihre Daten unter `%LOCALAPPDATA%\Larp Studio`; der Quellstarter im Programmordner.
 - **GitHub-Workflows:** Offline-Tests auf Windows und Linux bei jedem Push. Ein
   manueller Windows-Build unter **Actions → Windows app → Run workflow**
   erzeugt eine eigenständige EXE mit Dateien und zugehörigem Quellcode.
@@ -94,8 +95,9 @@ Atlas schließen, dieses Paket in den bisherigen Programmordner kopieren
 und `.venv`, `.atlas-data.json` sowie gegebenenfalls `.larp-routes.json`
 behalten. Danach **Start-Larp Studio.cmd** starten und die Desktop-Verknüpfung
 neu erstellen. Der alte Daten-Dateiname bleibt absichtlich erhalten.
-Die EXE-Ausgabe ist eine separate Installation; bestehende lokale Daten
-bei Bedarf in deren Ordner neben `Larp Studio.exe` kopieren.
+Die Einzel-EXE verwendet `%LOCALAPPDATA%\Larp Studio`. Beim Start neben alten
+Daten-Dateien übernimmt sie diese, sofern dort noch keine neuen Daten existieren.
+Vorhandene Daten werden dabei nicht überschrieben und alte Dateien bleiben erhalten.
 
 ## Straßentempo und Fahrzeit
 
@@ -190,8 +192,8 @@ pymobiledevice3-Version; Bibliotheksupdates benötigen eine erneute Prüfung.
 
 Nach dem ersten erfolgreichen Start kann **EXE-erstellen.cmd** auf deinem
 Windows-PC eine EXE mit PyInstaller bauen. Ergebnis:
-`dist\Larp Studio\Larp Studio.exe`. Den **gesamten** Ordner `dist\Larp Studio` zusammen behalten.
-Python wird anschließend für diesen Ordner nicht mehr benötigt; Apple-Treiber,
+`dist\Larp Studio.exe`. Nur diese eine EXE wird zum Starten benötigt.
+Python wird anschließend nicht mehr benötigt; Apple-Treiber,
 WebView2 und die Geräte-Voraussetzungen bleiben nötig.
 
 Die EXE wurde auf GitHubs Windows-Runner gebaut und gestartet. Geräte-CLI,

@@ -23,7 +23,7 @@ jobs:
         shell: pwsh
         run: |
           $result = Join-Path $env:RUNNER_TEMP 'larp-cli.json'
-          $process = Start-Process -FilePath '.\dist\Larp Studio\Larp Studio.exe' -ArgumentList "--device-cli `"$result`" --help" -Wait -PassThru
+          $process = Start-Process -FilePath '.\dist\Larp Studio.exe' -ArgumentList "--device-cli `"$result`" --help" -Wait -PassThru
           if (-not (Test-Path $result)) { throw 'Packaged CLI produced no result' }
           $reply = Get-Content -Raw $result | ConvertFrom-Json
           Write-Output "Device CLI exit code: $($reply.code)"
@@ -34,7 +34,7 @@ jobs:
         shell: pwsh
         run: |
           $result = Join-Path $env:RUNNER_TEMP 'larp-ui.json'
-          $process = Start-Process -FilePath '.\dist\Larp Studio\Larp Studio.exe' -ArgumentList "--smoke-ui `"$result`"" -PassThru
+          $process = Start-Process -FilePath '.\dist\Larp Studio.exe' -ArgumentList "--smoke-ui `"$result`"" -PassThru
           if (-not $process.WaitForExit(90000)) {
             $process.Kill()
             throw 'Windows interface startup timed out'
@@ -43,16 +43,31 @@ jobs:
           $reply = Get-Content -Raw $result | ConvertFrom-Json
           Write-Output ($reply | ConvertTo-Json -Depth 5)
           if ($process.ExitCode -ne 0 -or -not $reply.ok) { throw 'Windows interface failed its startup check' }
-      - name: Include source and license information
+      - name: Verify single-file distribution
         shell: pwsh
         run: |
-          git archive --format=zip --output="dist/Larp Studio/Source.zip" HEAD
-          Copy-Item LICENSE,THIRD-PARTY.md,README.md,README.de.md,START-HERE.txt,START-HIER.txt,FINAL-START.txt,WLAN-ANLEITUNG.txt 'dist/Larp Studio/'
-          python tools/package_sources.py 'dist/Larp Studio'
+          $files = @(Get-ChildItem dist -Recurse -File)
+          if ($files.Count -ne 1 -or $files[0].Name -ne 'Larp Studio.exe') {
+            throw 'The app download must contain exactly one EXE'
+          }
+      - name: Prepare separate source and license download
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path source
+          git archive --format=zip --output="source/Source.zip" HEAD
+          Copy-Item LICENSE,THIRD-PARTY.md,README.md,START-HERE.txt source/
+          python tools/package_sources.py source
       - uses: actions/upload-artifact@v4
         with:
           name: Larp-Studio-Windows
-          path: dist/Larp Studio/
+          path: dist/Larp Studio.exe
+          retention-days: 30
+          if-no-files-found: error
+      - name: Upload optional source and license archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: Larp-Studio-Source-and-Licenses
+          path: source/
           retention-days: 30
           if-no-files-found: error
       - name: Save startup diagnostics on failure

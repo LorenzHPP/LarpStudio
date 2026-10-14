@@ -3,7 +3,7 @@ from PyInstaller.utils.hooks import collect_all, copy_metadata
 datas = [('ui', 'ui'), ('services.json', '.'), ('licenses', 'licenses'),
          ('LICENSE', '.'), ('THIRD-PARTY.md', '.'), ('README.md', '.'), ('README.de.md', '.'), ('START-HERE.txt', '.'), ('START-HIER.txt', '.')]
 binaries = []
-hiddenimports = ['engine', 'transport', 'driving', 'artwork', 'route_library']
+hiddenimports = ['engine', 'transport', 'driving', 'artwork', 'route_library', 'storage']
 # Several transitive device packages obtain their version at import time.
 datas += copy_metadata('pymobiledevice3', recursive=True)
 datas += copy_metadata('pywebview', recursive=True)
@@ -16,7 +16,6 @@ a = Analysis(['app.py'], pathex=[], binaries=binaries, datas=datas,
              hiddenimports=hiddenimports, hookspath=[], hooksconfig={},
              runtime_hooks=[], excludes=[], noarchive=False)
 pyz = PYZ(a.pure)
-exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name='Larp Studio',
+exe = EXE(pyz, a.scripts, a.binaries, a.datas, [], name='Larp Studio',
           debug=False, bootloader_ignore_signals=False, strip=False,
           upx=False, console=False, icon='ui/assets/larp-studio.ico')
-coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name='Larp Studio')

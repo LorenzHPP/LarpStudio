@@ -17,7 +17,8 @@ PyPI geladen; sie werden im Quell-Download nicht vorinstalliert mitgeliefert.
 Ihre Lizenzdateien bleiben in der installierten Umgebung erhalten. Beim
 Weitergeben eines gebauten Programms müssen auch die Lizenz- und
 Quellcodepflichten der enthaltenen Abhängigkeiten berücksichtigt werden.
-Die GitHub-EXE-Ausgabe enthält unter `Third-party/` ein Paketverzeichnis,
+Der separate Download `Larp-Studio-Source-and-Licenses` enthält unter
+`Third-party/` ein Paketverzeichnis,
 Lizenzdateien und die passenden, per SHA-256 geprüften Quellarchive der
 GPL-/LGPL-Abhängigkeiten. `Source.zip` enthält den zugehörigen App-Code
 und die Build-Anweisungen.
